@@ -9,6 +9,8 @@ import java.util.List;
  * Created by User on 2016/6/2.
  */
 public class Utilities {
+    public static final boolean DEBUG = true;
+
     private static final List<String> sMonthStringList = Arrays.asList(new DateFormatSymbols().getMonths());
 
     private Utilities() {

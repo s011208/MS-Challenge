@@ -24,7 +24,7 @@ public class CalendarActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "QQQQ";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = Utilities.DEBUG;
     private static final boolean IS_SUPPORT_MATERIAL_DESIGN = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
 
     private TextView mMenuMonthText;
