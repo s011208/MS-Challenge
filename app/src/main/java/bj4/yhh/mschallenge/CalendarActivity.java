@@ -75,6 +75,7 @@ public class CalendarActivity extends AppCompatActivity
                 ActionBar.LayoutParams.WRAP_CONTENT,
                 ActionBar.LayoutParams.MATCH_PARENT);
         mMenuMonthText = (TextView) ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.menu_month_layout, null);
+        mMenuMonthText.setText(Utilities.getMonthString().get(0));
         getSupportActionBar().setCustomView(mMenuMonthText, params);
         mMenuMonthText.setOnClickListener(new View.OnClickListener() {
             @Override

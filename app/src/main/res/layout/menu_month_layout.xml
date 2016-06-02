@@ -9,6 +9,5 @@
     android:gravity="center_vertical"
     android:paddingLeft="@dimen/menu_month_text_horizontal_padding"
     android:paddingRight="@dimen/menu_month_text_horizontal_padding"
-    android:text="123"
     android:textColor="@android:color/white"
     android:textSize="@dimen/menu_month_text_size" />
