@@ -1,25 +1,44 @@
 package bj4.yhh.mschallenge;
 
+import android.content.Context;
+import android.graphics.drawable.Animatable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 public class CalendarActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "QQQQ";
+    private static final boolean DEBUG = true;
+    private static final boolean IS_SUPPORT_MATERIAL_DESIGN = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+
+    private TextView mMenuMonthText;
+    private boolean mIsShowCalendar = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+
+        initComponents();
+    }
+
+    private void initComponents() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -40,6 +59,61 @@ public class CalendarActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        initCustomActionBar();
+    }
+
+    private void initCustomActionBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setContentInsetsAbsolute(0, 0);
+        }
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        ActionBar.LayoutParams params = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.MATCH_PARENT);
+        mMenuMonthText = (TextView) ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.menu_month_layout, null);
+        getSupportActionBar().setCustomView(mMenuMonthText, params);
+        mMenuMonthText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (DEBUG) {
+                    Log.d(TAG, "mMenuMonthText onClick");
+                }
+                mIsShowCalendar = !mIsShowCalendar;
+                updateMenuChevronIcon(true);
+            }
+        });
+        updateMenuChevronIcon(false);
+    }
+
+    private void updateMenuChevronIcon(final boolean runAnimation) {
+        if (mIsShowCalendar) {
+            // will show icon ^
+            if (IS_SUPPORT_MATERIAL_DESIGN) {
+                if (runAnimation) {
+                    mMenuMonthText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_chevron_down_white_a_vec, 0);
+                    ((Animatable) mMenuMonthText.getCompoundDrawables()[2]).start();
+                } else {
+                    mMenuMonthText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_chevron_up_white_a_vec, 0);
+                }
+            } else {
+                mMenuMonthText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_chevron_up_white_24dp, 0);
+            }
+        } else {
+            // will show icon v
+            if (IS_SUPPORT_MATERIAL_DESIGN) {
+                if (runAnimation) {
+                    mMenuMonthText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_chevron_up_white_a_vec, 0);
+                    ((Animatable) mMenuMonthText.getCompoundDrawables()[2]).start();
+                } else {
+                    mMenuMonthText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_chevron_down_white_a_vec, 0);
+                }
+            } else {
+                mMenuMonthText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_chevron_down_white_24dp, 0);
+            }
+        }
     }
 
     @Override
