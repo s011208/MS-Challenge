@@ -16,4 +16,15 @@
     <dimen name="calendar_view_date_padding">5dp</dimen>
     <dimen name="calendar_view_dot_image_size">3dp</dimen>
     <dimen name="calendar_view_date_state_size">30dp</dimen>
+
+    <!-- schedule activity -->
+    <dimen name="schedule_title_drawable_padding">7dp</dimen>
+    <dimen name="schedule_title_drawable_size">10dp</dimen>
+    <dimen name="schedule_drawable_padding">24dp</dimen>
+    <dimen name="schedule_primary_text_size">18sp</dimen>
+    <dimen name="schedule_text_padding_without_icon">48dp</dimen>
+    <dimen name="schedule_text_margin_without_icon">@dimen/schedule_text_padding_without_icon</dimen>
+    <dimen name="schedule_item_padding">0dp</dimen>
+    <dimen name="schedule_secondary_text_size">12sp</dimen>
+    <dimen name="schedule_action_bar_text_size">@dimen/menu_month_text_size</dimen>
 </resources>

@@ -1,12 +1,13 @@
 package bj4.yhh.mschallenge;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +20,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -29,9 +32,11 @@ import bj4.yhh.mschallenge.calendar.CalendarPager;
 public class CalendarActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "QQQQ";
+    private static final String TAG = "CalendarActivity";
     private static final boolean DEBUG = Utilities.DEBUG;
     private static final boolean IS_SUPPORT_MATERIAL_DESIGN = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    private static final int CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION = 500;
+    private static final int REQUEST_ADD_NEW_SCHEDULE = 1000;
 
     private TextView mMenuMonthText;
     private boolean mIsShowCalendar = false;
@@ -56,8 +61,11 @@ public class CalendarActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent startIntent = new Intent(CalendarActivity.this, AddScheduleActivity.class);
+                startIntent.putExtra(AddScheduleActivity.EXTRA_YEAR, 2016);
+                startIntent.putExtra(AddScheduleActivity.EXTRA_MONTH, 5);
+                startIntent.putExtra(AddScheduleActivity.EXTRA_DAY, 5);
+                startActivityForResult(startIntent, REQUEST_ADD_NEW_SCHEDULE);
             }
         });
 
@@ -123,6 +131,15 @@ public class CalendarActivity extends AppCompatActivity
         updateMenuChevronIcon(false);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ADD_NEW_SCHEDULE) {
+            if (resultCode == Activity.RESULT_OK) {
+                // TODO refresh
+            }
+        }
+    }
+
     private void updateMenuChevronIcon(final boolean runAnimation) {
         if (mIsShowCalendar) {
             // will show icon ^
@@ -152,7 +169,19 @@ public class CalendarActivity extends AppCompatActivity
     }
 
     private void switchCalendarVisibility() {
-
+        mCalendarPager.animate().cancel();
+        if (mIsShowCalendar) {
+            mCalendarPager.animate()
+                    .setInterpolator(new DecelerateInterpolator())
+                    .translationY(-mCalendarPager.getHeight())
+                    .setDuration(CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION)
+                    .start();
+        } else {
+            mCalendarPager.animate()
+                    .setInterpolator(new AccelerateInterpolator())
+                    .translationY(0)
+                    .setDuration(CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION).start();
+        }
     }
 
     @Override

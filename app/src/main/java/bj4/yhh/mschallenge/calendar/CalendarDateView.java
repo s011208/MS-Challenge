@@ -21,7 +21,7 @@ import bj4.yhh.mschallenge.views.FullyExpandedGridView;
  * Created by User on 2016/6/3.
  */
 public class CalendarDateView extends FullyExpandedGridView {
-    private static final String TAG = "QQQQ";
+    private static final String TAG = "CalendarDateView";
     private static final boolean DEBUG = Utilities.DEBUG;
 
     private final ArrayList<WeakReference> mCallbacks = new ArrayList<WeakReference>();

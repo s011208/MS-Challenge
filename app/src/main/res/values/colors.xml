@@ -5,4 +5,13 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="menu_month_ripple_color">#66ffffff</color>
+
+    <!-- schedule activity -->
+    <color name="colorPrimary_schedule">@android:color/holo_green_light</color>
+    <color name="colorPrimaryDark_schedule">@android:color/holo_green_dark</color>
+    <color name="colorAccent_schedule">@android:color/holo_blue_light</color>
+
+    <color name="primary_text_color_schedule">@android:color/black</color>
+    <color name="secondary_text_color_schedule">#999</color>
+    <color name="separator_color_schedule">#bbb</color>
 </resources>

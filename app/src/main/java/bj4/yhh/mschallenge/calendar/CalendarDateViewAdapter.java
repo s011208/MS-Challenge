@@ -21,7 +21,7 @@ import bj4.yhh.mschallenge.Utilities;
  * Created by yenhsunhuang on 2016/6/3.
  */
 public class CalendarDateViewAdapter extends BaseAdapter {
-    private static final String TAG = "QQQQ";
+    private static final String TAG = "CalendarDateViewAdapter";
     private static final boolean DEBUG = Utilities.DEBUG;
 
     private static final int VIEW_TYPE_WEEKDAY = 1;
@@ -119,7 +119,7 @@ public class CalendarDateViewAdapter extends BaseAdapter {
                 } else {
                     holder.mDayText.setTextColor(Color.BLACK);
                 }
-                Log.d("QQQQ", "m: " + mMonth + ", y: " + mYear + ", mFirstPositionOfDayOfMonth: " + mFirstPositionOfDayOfMonth
+                Log.d(TAG, "m: " + mMonth + ", y: " + mYear + ", mFirstPositionOfDayOfMonth: " + mFirstPositionOfDayOfMonth
                         + ", mLastPositionOfDayOfMonth: " + mLastPositionOfDayOfMonth);
                 holder.mDayTextState.setVisibility(mPressedPosition == position ? View.VISIBLE : View.INVISIBLE);
                 holder.mDot.setVisibility(calendarDate.hasSchedule() ? View.VISIBLE : View.INVISIBLE);

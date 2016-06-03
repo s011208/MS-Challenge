@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:left="@dimen/schedule_title_drawable_padding"
+        android:right="@dimen/schedule_title_drawable_padding">
+        <shape android:shape="oval">
+
+            <solid android:color="@color/colorPrimary_schedule" />
+            <size
+                android:width="@dimen/schedule_title_drawable_size"
+                android:height="@dimen/schedule_title_drawable_size" />
+        </shape>
+    </item>
+</layer-list>

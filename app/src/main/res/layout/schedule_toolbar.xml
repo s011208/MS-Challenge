@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="@android:string/cancel"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_window_close_white_24dp" />
+
+    <ImageView
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="@android:string/ok"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_schedule_ok_button" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/ok"
+        android:layout_toRightOf="@+id/cancel"
+        android:gravity="center_vertical"
+        android:text="@string/schedule_new_event"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/schedule_action_bar_text_size" />
+</RelativeLayout>

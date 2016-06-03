@@ -5,4 +5,28 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- schedule activity -->
+    <string name="schedule_activity_hint_title">Title</string>
+    <string name="schedule_activity_whole_day">Whole day</string>
+    <string name="schedule_start_date">Start date</string>
+    <string name="schedule_finish_date">Finish date</string>
+    <string name="schedule_location_hint">Location</string>
+    <string name="schedule_notify">Notify</string>
+    <string name="schedule_member">Member</string>
+    <string name="schedule_description">Description</string>
+    <string name="schedule_new_event">New event</string>
+    <string name="schedule_cancel_confirm_dialog_title">Warning</string>
+    <string name="schedule_cancel_confirm_dialog_message">Do you want to cancel this new event?</string>
+    <string name="schedule_cancel_confirm_dialog_negative">Return</string>
+
+    <string-array name="schedule_notify_time_list">
+        <item>Do not notify</item>
+        <item>When event start</item>
+        <item>Before 5 minutes</item>
+        <item>Before 10 minutes</item>
+        <item>Before 15 minutes</item>
+        <item>Before 30 minutes</item>
+        <item>Before 1 hour</item>
+    </string-array>
 </resources>

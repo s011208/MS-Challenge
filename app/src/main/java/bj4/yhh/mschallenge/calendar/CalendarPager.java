@@ -12,7 +12,7 @@ import bj4.yhh.mschallenge.Utilities;
  * Created by yenhsunhuang on 2016/6/3.
  */
 public class CalendarPager extends ViewPager {
-    private static final String TAG = "QQQQ";
+    private static final String TAG = "CalendarPager";
     private static final boolean DEBUG = Utilities.DEBUG;
 
     private final PagerAdapter mPagerAdapter;
