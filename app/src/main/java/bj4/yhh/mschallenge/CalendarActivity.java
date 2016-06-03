@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,6 +21,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Calendar;
+import java.util.List;
+
+import bj4.yhh.mschallenge.calendar.CalendarPager;
+
 public class CalendarActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -30,11 +36,15 @@ public class CalendarActivity extends AppCompatActivity
     private TextView mMenuMonthText;
     private boolean mIsShowCalendar = false;
 
+    private CalendarPager mCalendarPager;
+    private final Calendar mCalendar = Calendar.getInstance();
+    private final List<String> mMonthString = Utilities.getMonthString();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-
+        mCalendar.setTimeInMillis(System.currentTimeMillis());
         initComponents();
     }
 
@@ -61,6 +71,28 @@ public class CalendarActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         initCustomActionBar();
+        mCalendarPager = (CalendarPager) findViewById(R.id.calendar_pager);
+        mCalendarPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                int[] value = mCalendarPager.getCurrentMonthAndYear();
+                String text = mMonthString.get(value[1]);
+                if (value[0] != mCalendar.get(Calendar.YEAR)) {
+                    text += " " + value[0];
+                }
+                mMenuMonthText.setText(text);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void initCustomActionBar() {
@@ -75,7 +107,7 @@ public class CalendarActivity extends AppCompatActivity
                 ActionBar.LayoutParams.WRAP_CONTENT,
                 ActionBar.LayoutParams.MATCH_PARENT);
         mMenuMonthText = (TextView) ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.menu_month_layout, null);
-        mMenuMonthText.setText(Utilities.getMonthString().get(0));
+        mMenuMonthText.setText(mMonthString.get(mCalendar.get(Calendar.MONTH)));
         getSupportActionBar().setCustomView(mMenuMonthText, params);
         mMenuMonthText.setOnClickListener(new View.OnClickListener() {
             @Override

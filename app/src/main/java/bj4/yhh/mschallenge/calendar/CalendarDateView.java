@@ -5,22 +5,15 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
-import bj4.yhh.mschallenge.R;
 import bj4.yhh.mschallenge.Utilities;
 import bj4.yhh.mschallenge.views.FullyExpandedGridView;
 
@@ -56,16 +49,30 @@ public class CalendarDateView extends FullyExpandedGridView {
                 if (DEBUG) {
                     Log.d(TAG, "onItemClick, position: " + position);
                 }
+                if (position < Calendar.DAY_OF_WEEK) return;
                 mCalendarDateViewAdapter.setPressedPosition(position);
                 mCalendarDateViewAdapter.notifyDataSetInvalidated();
+                for (WeakReference<Callback> callbackWeakReference : mCallbacks) {
+                    if (callbackWeakReference.get() != null) {
+                        callbackWeakReference.get().onDaySelected(
+                                ((CalendarDate) mCalendarDateViewAdapter.getItem(position)).getDate());
+                    }
+                }
             }
         });
-        setYearAndMonth(2016, Calendar.JUNE);
     }
 
     public void setYearAndMonth(int y, int m) {
         mCalendarDateViewAdapter = new CalendarDateViewAdapter(mContext, y, m);
         setAdapter(mCalendarDateViewAdapter);
+    }
+
+    public int getYear() {
+        return mCalendarDateViewAdapter.getYear();
+    }
+
+    public int getMonth() {
+        return mCalendarDateViewAdapter.getMonth();
     }
 
     public void setCallback(Callback cb) {
@@ -82,6 +89,6 @@ public class CalendarDateView extends FullyExpandedGridView {
     }
 
     public interface Callback {
-        void onDaySelected();
+        void onDaySelected(Date date);
     }
 }

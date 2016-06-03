@@ -2,6 +2,7 @@ package bj4.yhh.mschallenge.calendar;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +13,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import bj4.yhh.mschallenge.R;
 import bj4.yhh.mschallenge.Utilities;
@@ -51,40 +50,26 @@ public class CalendarDateViewAdapter extends BaseAdapter {
     }
 
     private void initData() {
-        mData.clear();
-        List<String> weekDayString = Utilities.getShortWeekdayString();
-        for (int i = 0; i < weekDayString.size(); ++i) {
-            if (DEBUG) {
-                Log.d(TAG, "weekDay: " + weekDayString.get(i));
+        new RetrieveCalendarDataHelper(mYear, mMonth, new RetrieveCalendarDataHelper.Callback() {
+            @Override
+            public void onPositionOfDayRetrieved(int[] positions) {
+                if (positions == null) return;
+                mFirstPositionOfDayOfMonth = positions[0];
+                mLastPositionOfDayOfMonth = positions[1];
             }
-            mData.add(new Weekday(weekDayString.get(i).toUpperCase()));
-        }
 
-        List<Date> displayDates = Utilities.getAllDateAtYearAndMonth(mYear, mMonth);
-
-        Calendar calendar = Calendar.getInstance();
-        int firstDayOfMonth = 1;
-        int lastDayOfMonth = mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-        for (Date date : displayDates) {
-            calendar.setTime(date);
-            final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-            final int month = calendar.get(Calendar.MONTH);
-            if (DEBUG) {
-                Log.d(TAG, "dayOfMonth: " + dayOfMonth + ", lastDayOfMonth: " + lastDayOfMonth);
+            @Override
+            public void onDataRetrieved(ArrayList<Object> data) {
+                if (data == null) return;
+                mData.clear();
+                mData.addAll(data);
             }
-            if (month == mMonth) {
-                if (dayOfMonth == firstDayOfMonth) {
-                    mFirstPositionOfDayOfMonth = mData.size();
-                } else if (dayOfMonth == lastDayOfMonth) {
-                    mLastPositionOfDayOfMonth = mData.size();
-                }
+
+            @Override
+            public void onFinishLoading() {
+                notifyDataSetChanged();
             }
-            mData.add(new CalendarDate(date, false));
-        }
-        if (DEBUG)
-            Log.e(TAG, "mFirstPositionOfDayOfMonth: " + mFirstPositionOfDayOfMonth
-                    + ", mLastPositionOfDayOfMonth: " + mLastPositionOfDayOfMonth);
+        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -134,6 +119,8 @@ public class CalendarDateViewAdapter extends BaseAdapter {
                 } else {
                     holder.mDayText.setTextColor(Color.BLACK);
                 }
+                Log.d("QQQQ", "m: " + mMonth + ", y: " + mYear + ", mFirstPositionOfDayOfMonth: " + mFirstPositionOfDayOfMonth
+                        + ", mLastPositionOfDayOfMonth: " + mLastPositionOfDayOfMonth);
                 holder.mDayTextState.setVisibility(mPressedPosition == position ? View.VISIBLE : View.INVISIBLE);
                 holder.mDot.setVisibility(calendarDate.hasSchedule() ? View.VISIBLE : View.INVISIBLE);
                 break;
@@ -154,5 +141,13 @@ public class CalendarDateViewAdapter extends BaseAdapter {
         if (item instanceof Weekday) return VIEW_TYPE_WEEKDAY;
         else if (item instanceof CalendarDate) return VIEW_TYPE_DATE;
         else return super.getItemViewType(position);
+    }
+
+    public int getYear() {
+        return mYear;
+    }
+
+    public int getMonth() {
+        return mMonth;
     }
 }

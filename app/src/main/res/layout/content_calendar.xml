@@ -12,7 +12,8 @@
     tools:context="bj4.yhh.mschallenge.CalendarActivity"
     tools:showIn="@layout/app_bar_calendar">
 
-    <bj4.yhh.mschallenge.calendar.CalendarDateView
+    <bj4.yhh.mschallenge.calendar.CalendarPager
+        android:id="@+id/calendar_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></bj4.yhh.mschallenge.calendar.CalendarDateView>
+        android:layout_height="match_parent"></bj4.yhh.mschallenge.calendar.CalendarPager>
 </RelativeLayout>
