@@ -1,11 +1,17 @@
 package bj4.yhh.mschallenge;
 
+import android.content.Context;
+import android.database.Cursor;
+
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import bj4.yhh.mschallenge.provider.Schedule;
+import bj4.yhh.mschallenge.provider.TableScheduleContent;
 
 /**
  * Created by User on 2016/6/2.
@@ -103,5 +109,19 @@ public class Utilities {
         return Math.max(startX, startY) <= Math.min(finishX, finishY);
     }
 
+    public static ArrayList<Schedule> getSchedulesBetweenDate(long scheduleStartRange, long scheduleFinishRange, Context context) {
+        Cursor scheduleCursor = context.getContentResolver().query(TableScheduleContent.URI, null,
+                "(" + TableScheduleContent.COLUMN_START_TIME + " > " + scheduleStartRange +
+                        " and " + TableScheduleContent.COLUMN_START_TIME + " < " + scheduleFinishRange +
+                        ") or (" + TableScheduleContent.COLUMN_FINISH_TIME + " > " + scheduleStartRange +
+                        " and " + TableScheduleContent.COLUMN_FINISH_TIME + " < " + scheduleFinishRange + ")",
+                null, null);
+        return Schedule.fromCursor(scheduleCursor);
+    }
 
+    public static int getDiffMinutes(int h1, int m1, int h2, int m2) {
+        int time1 = h1 * 60 + m1;
+        int time2 = h2 * 60 + m2;
+        return time1 - time2;
+    }
 }

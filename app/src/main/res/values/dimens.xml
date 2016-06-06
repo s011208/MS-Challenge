@@ -28,4 +28,11 @@
     <dimen name="schedule_item_padding">0dp</dimen>
     <dimen name="schedule_secondary_text_size">12sp</dimen>
     <dimen name="schedule_action_bar_text_size">@dimen/menu_month_text_size</dimen>
+
+    <!-- agenda view-->
+    <dimen name="agenda_view_section_title_text_size">16sp</dimen>
+    <dimen name="agenda_view_no_event_text_size">14sp</dimen>
+    <dimen name="agenda_view_item_padding">8dp</dimen>
+    <dimen name="agenda_view_event_title_text_size">18sp</dimen>
+    <dimen name="agenda_view_event_secondary_title_text_size">14sp</dimen>
 </resources>

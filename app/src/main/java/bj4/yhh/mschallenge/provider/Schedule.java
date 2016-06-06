@@ -24,7 +24,6 @@ public class Schedule {
         mLocation = location;
         mMember = member;
         mDescription = description;
-        android.util.Log.d("QQQQ", toString());
     }
 
     public long getId() {

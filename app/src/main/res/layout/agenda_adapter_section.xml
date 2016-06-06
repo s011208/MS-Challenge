@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/section_title"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fontFamily="sans-serif-condensed"
+    android:padding="@dimen/agenda_view_item_padding"
+    android:textAllCaps="true"
+    android:textSize="@dimen/agenda_view_section_title_text_size"
+    android:textStyle="bold">
+
+</TextView>

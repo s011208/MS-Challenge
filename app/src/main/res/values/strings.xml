@@ -29,4 +29,10 @@
         <item>Before 30 minutes</item>
         <item>Before 1 hour</item>
     </string-array>
+
+    <!-- agenda view-->
+    <string name="agenda_view_yesterday">Yesterday</string>
+    <string name="agenda_view_today">Today</string>
+    <string name="agenda_view_tomorrow">Tomorrow</string>
+    <string name="agenda_view_no_event">No event</string>
 </resources>

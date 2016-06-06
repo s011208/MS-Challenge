@@ -1,7 +1,6 @@
 package bj4.yhh.mschallenge.calendar;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.AsyncTask;
 
 import java.lang.ref.WeakReference;
@@ -12,7 +11,6 @@ import java.util.List;
 
 import bj4.yhh.mschallenge.Utilities;
 import bj4.yhh.mschallenge.provider.Schedule;
-import bj4.yhh.mschallenge.provider.TableScheduleContent;
 
 /**
  * Created by yenhsunhuang on 2016/6/3.
@@ -71,13 +69,7 @@ public class RetrieveCalendarDataHelper extends AsyncTask<Void, Void, ArrayList<
 
         long scheduleStartRange = displayDates.get(0).getTime();
         long scheduleFinishRange = displayDates.get(displayDates.size() - 1).getTime() + Utilities.DAY - Utilities.SECOND; // 23:59:59
-        Cursor scheduleCursor = context.getContentResolver().query(TableScheduleContent.URI, null,
-                "(" + TableScheduleContent.COLUMN_START_TIME + " > " + scheduleStartRange +
-                        " and " + TableScheduleContent.COLUMN_START_TIME + " < " + scheduleFinishRange +
-                        ") or (" + TableScheduleContent.COLUMN_FINISH_TIME + " > " + scheduleStartRange +
-                        " and " + TableScheduleContent.COLUMN_FINISH_TIME + " < " + scheduleFinishRange + ")",
-                null, null);
-        ArrayList<Schedule> schedules = Schedule.fromCursor(scheduleCursor);
+        ArrayList<Schedule> schedules = Utilities.getSchedulesBetweenDate(scheduleStartRange, scheduleFinishRange, context);
         for (Date date : displayDates) {
             calendar.setTime(date);
             final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);

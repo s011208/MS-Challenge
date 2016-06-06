@@ -23,6 +23,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/calendar_pager"
-        android:background="@android:color/holo_blue_light"></bj4.yhh.mschallenge.agenda.AgendaView>
+        android:divider="#ffcccccc"
+        android:dividerHeight="1dp"
+        android:listSelector="?android:selectableItemBackground"></bj4.yhh.mschallenge.agenda.AgendaView>
 
 </RelativeLayout>
