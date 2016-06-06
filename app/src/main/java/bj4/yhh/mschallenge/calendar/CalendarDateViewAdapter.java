@@ -122,7 +122,8 @@ public class CalendarDateViewAdapter extends BaseAdapter {
                 Log.d(TAG, "m: " + mMonth + ", y: " + mYear + ", mFirstPositionOfDayOfMonth: " + mFirstPositionOfDayOfMonth
                         + ", mLastPositionOfDayOfMonth: " + mLastPositionOfDayOfMonth);
                 holder.mDayTextState.setVisibility(mPressedPosition == position ? View.VISIBLE : View.INVISIBLE);
-                holder.mDot.setVisibility(calendarDate.hasSchedule() ? View.VISIBLE : View.INVISIBLE);
+                holder.mDot.setVisibility(calendarDate.hasSchedule() ?
+                        mPressedPosition == position ? View.INVISIBLE : View.VISIBLE : View.INVISIBLE);
                 break;
             default:
         }

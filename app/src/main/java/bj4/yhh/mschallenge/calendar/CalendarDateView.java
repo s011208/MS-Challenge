@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import bj4.yhh.mschallenge.R;
 import bj4.yhh.mschallenge.Utilities;
 import bj4.yhh.mschallenge.views.FullyExpandedGridView;
 
@@ -42,6 +43,7 @@ public class CalendarDateView extends FullyExpandedGridView {
         setNumColumns(7);
         setDrawSelectorOnTop(true);
         setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+        setVerticalSpacing(mContext.getResources().getDimensionPixelSize(R.dimen.calendar_view_vertical_spacing));
         setSelector(new ColorDrawable(Color.TRANSPARENT));
         setOnItemClickListener(new OnItemClickListener() {
             @Override
