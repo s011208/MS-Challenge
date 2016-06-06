@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import bj4.yhh.mschallenge.Utilities;
@@ -16,6 +17,7 @@ public class CalendarPager extends ViewPager {
     private static final boolean DEBUG = Utilities.DEBUG;
 
     private final PagerAdapter mPagerAdapter;
+
     public CalendarPager(Context context) {
         this(context, null);
     }
@@ -31,8 +33,15 @@ public class CalendarPager extends ViewPager {
     public int[] getCurrentMonthAndYear() {
         View view = findViewWithTag(CalendarPagerAdapter.class.getName() + getCurrentItem());
         if (view != null && view instanceof CalendarDateView) {
-            return new int[] {((CalendarDateView)view).getYear(), ((CalendarDateView)view).getMonth()};
+            return new int[]{((CalendarDateView) view).getYear(), ((CalendarDateView) view).getMonth()};
         }
         return null;
+    }
+
+    public void requestUpdate() {
+        if (DEBUG) {
+            Log.e(TAG, "requestUpdate");
+        }
+        mPagerAdapter.notifyDataSetChanged();
     }
 }

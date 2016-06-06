@@ -68,4 +68,12 @@ public class MethodTest extends AndroidTestCase {
         assertEquals(2018, result.get(Calendar.YEAR));
         assertEquals(Calendar.MAY, result.get(Calendar.MONTH));
     }
+
+    public void testIsTimeIntercept() {
+        assertEquals(true, Utilities.isTimeOverlapping(3, 9, 4, 6));
+        assertEquals(false, Utilities.isTimeOverlapping(3, 12, 13, 19));
+        assertEquals(true, Utilities.isTimeOverlapping(3, 12, 11, 14));
+        assertEquals(true, Utilities.isTimeOverlapping(3, 9, 1, 4));
+        assertEquals(false, Utilities.isTimeOverlapping(3, 9, 1, 2));
+    }
 }

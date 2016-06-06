@@ -13,6 +13,11 @@ import java.util.List;
 public class Utilities {
     public static final boolean DEBUG = true;
 
+    public static final long SECOND = 1000;
+    public static final long MINUTE = 60 * SECOND;
+    public static final long HOUR = 60 * MINUTE;
+    public static final long DAY = 24 * HOUR;
+
     private static final List<String> sMonthStringList = new ArrayList<>();
 
     private static final List<String> sShortWeekdayList = new ArrayList<>();
@@ -90,9 +95,12 @@ public class Utilities {
             final int startIndex = 0;
             final int endIndex = (Calendar.DAY_OF_WEEK - dayOfWeekOfLastDay) + Calendar.DAY_OF_WEEK;
             rtn.addAll(nextDates.subList(startIndex, endIndex));
-
         }
         return rtn;
+    }
+
+    public static boolean isTimeOverlapping(long startX, long finishX, long startY, long finishY) {
+        return Math.max(startX, startY) <= Math.min(finishX, finishY);
     }
 
 

@@ -50,7 +50,7 @@ public class CalendarDateViewAdapter extends BaseAdapter {
     }
 
     private void initData() {
-        new RetrieveCalendarDataHelper(mYear, mMonth, new RetrieveCalendarDataHelper.Callback() {
+        new RetrieveCalendarDataHelper(mContext, mYear, mMonth, new RetrieveCalendarDataHelper.Callback() {
             @Override
             public void onPositionOfDayRetrieved(int[] positions) {
                 if (positions == null) return;

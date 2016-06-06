@@ -50,8 +50,8 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
     public static final String EXTRA_HOUR = "e_hour";
     public static final String EXTRA_MINUTE = "e_minute";
 
-    private static final long HOUR = 60 * 60 * 1000;
-    private static final long DAY = 24 * HOUR;
+    private static final long HOUR = Utilities.HOUR;
+    private static final long DAY = Utilities.DAY;
 
     private EditText mTitle, mLocation;
     private TextView mStartDate, mFinishDate, mStartTime, mFinishTime, mMember, mDescription, mNotifyResult;
@@ -259,7 +259,11 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onBackPressed() {
-        handleOnCancel();
+        if (mOk.isEnabled()) {
+            handleOnCancel();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void handleOnCancel() {

@@ -135,7 +135,7 @@ public class CalendarActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ADD_NEW_SCHEDULE) {
             if (resultCode == Activity.RESULT_OK) {
-                // TODO refresh
+                mCalendarPager.requestUpdate();
             }
         }
     }
