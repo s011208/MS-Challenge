@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Date;
 
 import bj4.yhh.mschallenge.R;
@@ -24,7 +23,7 @@ public class CalendarDateView extends FullyExpandedGridView {
     private static final String TAG = "CalendarDateView";
     private static final boolean DEBUG = Utilities.DEBUG;
 
-    private final ArrayList<WeakReference> mCallbacks = new ArrayList<WeakReference>();
+    private WeakReference<Callback> mCallback;
     private CalendarDateViewAdapter mCalendarDateViewAdapter;
     private Context mContext;
 
@@ -53,18 +52,17 @@ public class CalendarDateView extends FullyExpandedGridView {
                 if (!mCalendarDateViewAdapter.getItem(position).isClickable()) return;
                 mCalendarDateViewAdapter.setPressedPosition(position);
                 mCalendarDateViewAdapter.notifyDataSetInvalidated();
-                for (WeakReference<Callback> callbackWeakReference : mCallbacks) {
-                    if (callbackWeakReference.get() != null) {
-                        callbackWeakReference.get().onDaySelected(
-                                ((CalendarDate) mCalendarDateViewAdapter.getItem(position)).getDate());
-                    }
+                if (mCallback.get() != null) {
+                    mCallback.get().onDaySelected(
+                            ((CalendarDate) mCalendarDateViewAdapter.getItem(position)).getDate());
                 }
             }
         });
     }
 
-    public void setYearAndMonth(int y, int m) {
-        mCalendarDateViewAdapter = new CalendarDateViewAdapter(mContext, y, m);
+    public void setArguments(int year, int month, Callback cb) {
+        mCallback = new WeakReference<>(cb);
+        mCalendarDateViewAdapter = new CalendarDateViewAdapter(mContext, year, month, cb.getSelectedDate());
         setAdapter(mCalendarDateViewAdapter);
     }
 
@@ -76,20 +74,27 @@ public class CalendarDateView extends FullyExpandedGridView {
         return mCalendarDateViewAdapter.getMonth();
     }
 
-    public void setCallback(Callback cb) {
-        mCallbacks.add(new WeakReference(cb));
+    public void onDestroy() {
+        mCallback = null;
     }
 
-    public void removeCallback(Callback cb) {
-        for (int i = 0; i < mCallbacks.size(); ++i) {
-            Callback callback = (Callback) mCallbacks.get(i).get();
-            if (callback == null || callback == cb) {
-                mCallbacks.remove(i--);
+    public void updateSelectedDate(Date selectedDate) {
+        int pressedPosition = -1;
+        for (int i = 0; i < mCalendarDateViewAdapter.getCount(); ++i) {
+            CalendarItem item = mCalendarDateViewAdapter.getItem(i);
+            if (item instanceof CalendarDate) {
+                if (((CalendarDate) item).getDate().equals(selectedDate)) {
+                    pressedPosition = i;
+                }
             }
         }
+        mCalendarDateViewAdapter.setPressedPosition(pressedPosition);
+        mCalendarDateViewAdapter.notifyDataSetInvalidated();
     }
 
     public interface Callback {
         void onDaySelected(Date date);
+
+        Date getSelectedDate();
     }
 }

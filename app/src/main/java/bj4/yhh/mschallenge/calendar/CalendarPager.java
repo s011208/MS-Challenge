@@ -7,6 +7,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import java.util.Date;
+
 import bj4.yhh.mschallenge.Utilities;
 
 /**
@@ -16,7 +18,7 @@ public class CalendarPager extends ViewPager {
     private static final String TAG = "CalendarPager";
     private static final boolean DEBUG = Utilities.DEBUG;
 
-    private final PagerAdapter mPagerAdapter;
+    private final CalendarPagerAdapter mPagerAdapter;
 
     public CalendarPager(Context context) {
         this(context, null);
@@ -72,5 +74,10 @@ public class CalendarPager extends ViewPager {
             }
         }
         return result;
+    }
+
+    public void setSelectedDate(Date selectedDate) {
+        if (mPagerAdapter == null) return;
+        mPagerAdapter.setSelectedDate(selectedDate);
     }
 }

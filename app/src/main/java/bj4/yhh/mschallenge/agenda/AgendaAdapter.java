@@ -50,6 +50,7 @@ public class AgendaAdapter extends BaseAdapter {
             public void onDataRetrieved(ArrayList<AgendaItem> data) {
                 mItems.clear();
                 mItems.addAll(data);
+                notifyDataSetChanged();
             }
         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

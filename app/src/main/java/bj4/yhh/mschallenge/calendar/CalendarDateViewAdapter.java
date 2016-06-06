@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import bj4.yhh.mschallenge.R;
 import bj4.yhh.mschallenge.Utilities;
@@ -29,19 +30,21 @@ public class CalendarDateViewAdapter extends BaseAdapter {
 
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
-    private ArrayList<CalendarItem> mData = new ArrayList<>();
     private final int mYear, mMonth;
+    private ArrayList<CalendarItem> mData = new ArrayList<>();
     private Calendar mCalendar = Calendar.getInstance();
     private int mFirstPositionOfDayOfMonth, mLastPositionOfDayOfMonth;
     private int mPressedPosition = -1;
+    private Date mPressedDate;
 
-    public CalendarDateViewAdapter(Context context, int y, int m) {
+    public CalendarDateViewAdapter(Context context, int y, int m, Date pressedDate) {
         mContext = context;
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mYear = y;
         mMonth = m;
         mCalendar.set(Calendar.YEAR, mYear);
         mCalendar.set(Calendar.MONTH, mMonth);
+        mPressedDate = pressedDate;
         initData();
     }
 
@@ -63,6 +66,15 @@ public class CalendarDateViewAdapter extends BaseAdapter {
                 if (data == null) return;
                 mData.clear();
                 mData.addAll(data);
+                for (int i = 0; i < mData.size(); ++i) {
+                    CalendarItem item = mData.get(i);
+                    if (item instanceof CalendarDate) {
+                        if (((CalendarDate) item).getDate().equals(mPressedDate)) {
+                            setPressedPosition(i);
+                            break;
+                        }
+                    }
+                }
             }
 
             @Override
@@ -130,12 +142,6 @@ public class CalendarDateViewAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private static class ViewHolder {
-        private TextView mDayText;
-        private ImageView mDot;
-        private ImageView mDayTextState;
-    }
-
     @Override
     public int getItemViewType(int position) {
         final Object item = getItem(position);
@@ -150,5 +156,11 @@ public class CalendarDateViewAdapter extends BaseAdapter {
 
     public int getMonth() {
         return mMonth;
+    }
+
+    private static class ViewHolder {
+        private TextView mDayText;
+        private ImageView mDot;
+        private ImageView mDayTextState;
     }
 }

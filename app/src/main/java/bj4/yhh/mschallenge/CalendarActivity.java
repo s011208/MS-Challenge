@@ -25,31 +25,37 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import bj4.yhh.mschallenge.agenda.AgendaView;
+import bj4.yhh.mschallenge.calendar.CalendarDateView;
 import bj4.yhh.mschallenge.calendar.CalendarPager;
 
 public class CalendarActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        CalendarDateView.Callback {
 
     private static final String TAG = "CalendarActivity";
     private static final boolean DEBUG = Utilities.DEBUG;
     private static final boolean IS_SUPPORT_MATERIAL_DESIGN = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     private static final int CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION = 500;
     private static final int REQUEST_ADD_NEW_SCHEDULE = 1000;
-
-    private TextView mMenuMonthText;
-    private boolean mIsShowCalendar = false;
-
-    private CalendarPager mCalendarPager;
     private final Calendar mCalendar = Calendar.getInstance();
     private final List<String> mMonthString = Utilities.getMonthString();
+    private TextView mMenuMonthText;
+    private boolean mIsShowCalendar = false;
+    private CalendarPager mCalendarPager;
+    private Date mSelectedDate;
+    private AgendaView mAgendaView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
         mCalendar.setTimeInMillis(System.currentTimeMillis());
+        Utilities.clearCalendarOffset(mCalendar);
+        mSelectedDate = mCalendar.getTime();
         initComponents();
     }
 
@@ -62,9 +68,11 @@ public class CalendarActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent startIntent = new Intent(CalendarActivity.this, AddScheduleActivity.class);
-                startIntent.putExtra(AddScheduleActivity.EXTRA_YEAR, 2016);
-                startIntent.putExtra(AddScheduleActivity.EXTRA_MONTH, 5);
-                startIntent.putExtra(AddScheduleActivity.EXTRA_DAY, 5);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(mSelectedDate);
+                startIntent.putExtra(AddScheduleActivity.EXTRA_YEAR, calendar.get(Calendar.YEAR));
+                startIntent.putExtra(AddScheduleActivity.EXTRA_MONTH, calendar.get(Calendar.MONTH));
+                startIntent.putExtra(AddScheduleActivity.EXTRA_DAY, calendar.get(Calendar.DAY_OF_MONTH));
                 startActivityForResult(startIntent, REQUEST_ADD_NEW_SCHEDULE);
             }
         });
@@ -83,7 +91,6 @@ public class CalendarActivity extends AppCompatActivity
         mCalendarPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -98,9 +105,11 @@ public class CalendarActivity extends AppCompatActivity
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
+
+        mAgendaView = (AgendaView) findViewById(R.id.agenda_view);
+        mAgendaView.update(mSelectedDate);
     }
 
     private void initCustomActionBar() {
@@ -239,5 +248,18 @@ public class CalendarActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onDaySelected(Date date) {
+        mSelectedDate = date;
+        mCalendarPager.setSelectedDate(date);
+        Log.e("QQQQ", "onDaySelected");
+        mAgendaView.update(mSelectedDate);
+    }
+
+    @Override
+    public Date getSelectedDate() {
+        return mSelectedDate;
     }
 }

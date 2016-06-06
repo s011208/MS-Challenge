@@ -16,25 +16,17 @@ import bj4.yhh.mschallenge.provider.Schedule;
  * Created by yenhsunhuang on 2016/6/3.
  */
 public class RetrieveCalendarDataHelper extends AsyncTask<Void, Void, ArrayList<CalendarItem>> {
-    interface Callback {
-        void onPositionOfDayRetrieved(int[] positions);
-
-        void onDataRetrieved(ArrayList<CalendarItem> data);
-
-        void onFinishLoading();
-    }
-
-    private final int mYear, mMonth;
-    private int mFirstPositionOfDayOfMonth, mLastPositionOfDayOfMonth;
     private final Calendar mCalendar;
     private final WeakReference<Callback> mCallback;
     private final WeakReference<Context> mContext;
+    private int mFirstPositionOfDayOfMonth, mLastPositionOfDayOfMonth;
 
     RetrieveCalendarDataHelper(Context context, int y, int m, Callback cb) {
         mContext = new WeakReference<>(context);
         mCalendar = Calendar.getInstance();
-        mYear = y;
-        mMonth = m;
+        mCalendar.set(Calendar.YEAR, y);
+        mCalendar.set(Calendar.MONTH, m);
+        Utilities.clearCalendarOffset(mCalendar);
         mCallback = new WeakReference<>(cb);
     }
 
@@ -61,7 +53,7 @@ public class RetrieveCalendarDataHelper extends AsyncTask<Void, Void, ArrayList<
             rtn.add(new Weekday(weekDayString.get(i).toUpperCase()));
         }
 
-        List<Date> displayDates = Utilities.getAllDateAtYearAndMonth(mYear, mMonth);
+        List<Date> displayDates = Utilities.getAllDateAtYearAndMonth(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH));
 
         Calendar calendar = Calendar.getInstance();
         int firstDayOfMonth = mCalendar.getActualMinimum(Calendar.DAY_OF_MONTH);
@@ -75,7 +67,7 @@ public class RetrieveCalendarDataHelper extends AsyncTask<Void, Void, ArrayList<
             final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
             final int month = calendar.get(Calendar.MONTH);
             boolean clickable = true;
-            if (month == mMonth) {
+            if (month == mCalendar.get(Calendar.MONTH)) {
                 if (dayOfMonth == firstDayOfMonth) {
                     mFirstPositionOfDayOfMonth = rtn.size();
                 } else if (dayOfMonth == lastDayOfMonth) {
@@ -95,5 +87,13 @@ public class RetrieveCalendarDataHelper extends AsyncTask<Void, Void, ArrayList<
             rtn.add(new CalendarDate(date, hasSchedule, clickable));
         }
         return rtn;
+    }
+
+    interface Callback {
+        void onPositionOfDayRetrieved(int[] positions);
+
+        void onDataRetrieved(ArrayList<CalendarItem> data);
+
+        void onFinishLoading();
     }
 }

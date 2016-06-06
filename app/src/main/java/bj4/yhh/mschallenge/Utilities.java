@@ -63,6 +63,10 @@ public class Utilities {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, y);
         calendar.set(Calendar.MONTH, m);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         final int dayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         if (fillUpSpace) {
             // filling up previous
@@ -123,5 +127,17 @@ public class Utilities {
         int time1 = h1 * 60 + m1;
         int time2 = h2 * 60 + m2;
         return time1 - time2;
+    }
+
+    /**
+     * keep year, month & day of calendar
+     *
+     * @param c
+     */
+    public static void clearCalendarOffset(Calendar c) {
+        c.set(Calendar.MILLISECOND, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.HOUR_OF_DAY, 0);
     }
 }

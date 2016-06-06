@@ -2,23 +2,25 @@ package bj4.yhh.mschallenge.calendar;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by yenhsunhuang on 2016/6/3.
  */
 public class CalendarPagerAdapter extends PagerAdapter {
-    private static final int NUMBER_OF_PAGE = 1000;
     public static final int CENTRAL_PAGE = 500;
+    private static final int NUMBER_OF_PAGE = 1000;
     private final int mBaseYear, mBaseMonth;
     private final Context mContext;
     private final Calendar mCalendar = Calendar.getInstance();
+    private final Map<Integer, CalendarDateView> mViewsMap = new HashMap<>();
 
     public CalendarPagerAdapter(Context context) {
         mContext = context;
@@ -42,9 +44,10 @@ public class CalendarPagerAdapter extends PagerAdapter {
         Date pageDate = calculateDateByPosition(mBaseYear, mBaseMonth, position);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(pageDate);
-        calendarView.setYearAndMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+        calendarView.setArguments(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), (CalendarDateView.Callback) mContext);
         container.addView(calendarView);
         calendarView.setTag(CalendarPagerAdapter.class.getName() + position);
+        mViewsMap.put(position, calendarView);
         return calendarView;
     }
 
@@ -61,10 +64,21 @@ public class CalendarPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+        if (object instanceof CalendarDateView) {
+            ((CalendarDateView) object).onDestroy();
+        }
+        mViewsMap.remove(position);
         container.removeView((View) object);
     }
 
     public int getItemPosition(Object object) {
         return POSITION_NONE;
+    }
+
+    public void setSelectedDate(Date selectedDate) {
+        Iterator<CalendarDateView> iterator = mViewsMap.values().iterator();
+        while (iterator.hasNext()) {
+            iterator.next().updateSelectedDate(selectedDate);
+        }
     }
 }
