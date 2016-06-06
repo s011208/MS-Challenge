@@ -11,7 +11,6 @@ import android.widget.GridView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import bj4.yhh.mschallenge.R;
@@ -51,7 +50,7 @@ public class CalendarDateView extends FullyExpandedGridView {
                 if (DEBUG) {
                     Log.d(TAG, "onItemClick, position: " + position);
                 }
-                if (position < Calendar.DAY_OF_WEEK) return;
+                if (!mCalendarDateViewAdapter.getItem(position).isClickable()) return;
                 mCalendarDateViewAdapter.setPressedPosition(position);
                 mCalendarDateViewAdapter.notifyDataSetInvalidated();
                 for (WeakReference<Callback> callbackWeakReference : mCallbacks) {

@@ -3,7 +3,6 @@ package bj4.yhh.mschallenge.calendar;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -18,11 +17,11 @@ import bj4.yhh.mschallenge.provider.TableScheduleContent;
 /**
  * Created by yenhsunhuang on 2016/6/3.
  */
-public class RetrieveCalendarDataHelper extends AsyncTask<Void, Void, ArrayList<Object>> {
+public class RetrieveCalendarDataHelper extends AsyncTask<Void, Void, ArrayList<CalendarItem>> {
     interface Callback {
         void onPositionOfDayRetrieved(int[] positions);
 
-        void onDataRetrieved(ArrayList<Object> data);
+        void onDataRetrieved(ArrayList<CalendarItem> data);
 
         void onFinishLoading();
     }
@@ -34,7 +33,7 @@ public class RetrieveCalendarDataHelper extends AsyncTask<Void, Void, ArrayList<
     private final WeakReference<Context> mContext;
 
     RetrieveCalendarDataHelper(Context context, int y, int m, Callback cb) {
-        mContext = new WeakReference<Context>(context);
+        mContext = new WeakReference<>(context);
         mCalendar = Calendar.getInstance();
         mYear = y;
         mMonth = m;
@@ -42,12 +41,12 @@ public class RetrieveCalendarDataHelper extends AsyncTask<Void, Void, ArrayList<
     }
 
     @Override
-    protected ArrayList<Object> doInBackground(Void... params) {
+    protected ArrayList<CalendarItem> doInBackground(Void... params) {
         return retrieveData();
     }
 
     @Override
-    protected void onPostExecute(ArrayList<Object> objects) {
+    protected void onPostExecute(ArrayList<CalendarItem> objects) {
         Callback cb = mCallback.get();
         if (cb == null) return;
         cb.onDataRetrieved(objects);
@@ -55,8 +54,8 @@ public class RetrieveCalendarDataHelper extends AsyncTask<Void, Void, ArrayList<
         cb.onFinishLoading();
     }
 
-    private ArrayList<Object> retrieveData() {
-        final ArrayList<Object> rtn = new ArrayList<>();
+    private ArrayList<CalendarItem> retrieveData() {
+        final ArrayList<CalendarItem> rtn = new ArrayList<>();
         final Context context = mContext.get();
         if (context == null) return rtn;
         List<String> weekDayString = Utilities.getShortWeekdayString();
@@ -83,12 +82,15 @@ public class RetrieveCalendarDataHelper extends AsyncTask<Void, Void, ArrayList<
             calendar.setTime(date);
             final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
             final int month = calendar.get(Calendar.MONTH);
+            boolean clickable = true;
             if (month == mMonth) {
                 if (dayOfMonth == firstDayOfMonth) {
                     mFirstPositionOfDayOfMonth = rtn.size();
                 } else if (dayOfMonth == lastDayOfMonth) {
                     mLastPositionOfDayOfMonth = rtn.size();
                 }
+            } else {
+                clickable = false;
             }
             boolean hasSchedule = false;
             for (Schedule schedule : schedules) {
@@ -98,7 +100,7 @@ public class RetrieveCalendarDataHelper extends AsyncTask<Void, Void, ArrayList<
                     break;
                 }
             }
-            rtn.add(new CalendarDate(date, hasSchedule));
+            rtn.add(new CalendarDate(date, hasSchedule, clickable));
         }
         return rtn;
     }

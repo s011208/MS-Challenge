@@ -29,7 +29,7 @@ public class CalendarDateViewAdapter extends BaseAdapter {
 
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
-    private ArrayList<Object> mData = new ArrayList<>();
+    private ArrayList<CalendarItem> mData = new ArrayList<>();
     private final int mYear, mMonth;
     private Calendar mCalendar = Calendar.getInstance();
     private int mFirstPositionOfDayOfMonth, mLastPositionOfDayOfMonth;
@@ -59,7 +59,7 @@ public class CalendarDateViewAdapter extends BaseAdapter {
             }
 
             @Override
-            public void onDataRetrieved(ArrayList<Object> data) {
+            public void onDataRetrieved(ArrayList<CalendarItem> data) {
                 if (data == null) return;
                 mData.clear();
                 mData.addAll(data);
@@ -78,7 +78,7 @@ public class CalendarDateViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public CalendarItem getItem(int position) {
         return mData.get(position);
     }
 
