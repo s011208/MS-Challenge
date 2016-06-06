@@ -182,14 +182,14 @@ public class AgendaAdapter extends BaseAdapter {
         calendar.setTimeInMillis(item.getDateTime());
         if (calendar.get(Calendar.MONTH) == mCalendar.get(Calendar.MONTH)
                 && calendar.get(Calendar.YEAR) == mCalendar.get(Calendar.YEAR)) {
-            int currenyDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+            int currentDay = mCalendar.get(Calendar.DAY_OF_MONTH);
             int sectionDay = calendar.get(Calendar.DAY_OF_MONTH);
-            if (currenyDay - 1 == sectionDay) {
-                display = mContext.getResources().getString(R.string.agenda_view_yesterday) + " 。 " + display;
-            } else if (currenyDay == sectionDay) {
-                display = mContext.getResources().getString(R.string.agenda_view_today) + " 。 " + display;
-            } else if (currenyDay + 1 == sectionDay) {
-                display = mContext.getResources().getString(R.string.agenda_view_tomorrow) + " 。 " + display;
+            if (currentDay - 1 == sectionDay) {
+                display = mContext.getResources().getString(R.string.agenda_view_yesterday) + " ·" + display;
+            } else if (currentDay == sectionDay) {
+                display = mContext.getResources().getString(R.string.agenda_view_today) + " ·" + display;
+            } else if (currentDay + 1 == sectionDay) {
+                display = mContext.getResources().getString(R.string.agenda_view_tomorrow) + " ·" + display;
             }
         }
         holder.mSectionTitle.setText(display);
