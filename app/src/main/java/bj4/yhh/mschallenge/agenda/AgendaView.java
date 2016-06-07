@@ -34,8 +34,12 @@ public class AgendaView extends ListView {
     }
 
     private void update(long startDateTime, long finishDateTime) {
-        mAdapter = new AgendaAdapter(mContext, startDateTime, finishDateTime);
-        setAdapter(mAdapter);
+        if (mAdapter == null) {
+            mAdapter = new AgendaAdapter(mContext, startDateTime, finishDateTime);
+            setAdapter(mAdapter);
+        } else {
+            mAdapter.setDateTimeRange(startDateTime, finishDateTime);
+        }
     }
 
     public void update(Date date) {

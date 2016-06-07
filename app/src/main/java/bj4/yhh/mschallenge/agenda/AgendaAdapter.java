@@ -32,15 +32,20 @@ public class AgendaAdapter extends BaseAdapter {
     private final Context mContext;
     private final LayoutInflater mInflater;
     private final ArrayList<AgendaItem> mItems = new ArrayList<>();
-    private final long mStartDateTime, mFinishDateTime;
+    private long mStartDateTime, mFinishDateTime;
     private final Calendar mCalendar = Calendar.getInstance();
 
     public AgendaAdapter(Context context, long startDateTime, long finishDateTime) {
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mCalendar.setTimeInMillis(System.currentTimeMillis());
+        Utilities.clearCalendarOffset(mCalendar);
+        setDateTimeRange(startDateTime, finishDateTime);
+    }
+
+    public void setDateTimeRange(long startDateTime, long finishDateTime) {
         mStartDateTime = startDateTime;
         mFinishDateTime = finishDateTime;
-        mCalendar.setTimeInMillis(System.currentTimeMillis());
         initData();
     }
 
