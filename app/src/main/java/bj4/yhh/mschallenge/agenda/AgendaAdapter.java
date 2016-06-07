@@ -16,11 +16,12 @@ import java.util.Calendar;
 import bj4.yhh.mschallenge.R;
 import bj4.yhh.mschallenge.Utilities;
 import bj4.yhh.mschallenge.provider.Schedule;
+import bj4.yhh.mschallenge.views.PinnedSectionListView;
 
 /**
  * Created by yenhsunhuang on 2016/6/6.
  */
-public class AgendaAdapter extends BaseAdapter {
+public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.PinnedSectionListAdapter {
     private static final boolean DEBUG = Utilities.DEBUG;
     private static final String TAG = "AgendaAdapter";
 
@@ -80,7 +81,7 @@ public class AgendaAdapter extends BaseAdapter {
         final int viewType = getItemViewType(position);
         switch (viewType) {
             case ITEM_VIEW_TYPE_SECTION:
-                convertView = handleViewTypeSection(position, convertView);
+                convertView = handleViewTypeSection(position, convertView, parent);
                 break;
             case ITEM_VIEW_TYPE_EVENT:
                 convertView = handleViewTypeEvent(position, convertView);
@@ -172,7 +173,7 @@ public class AgendaAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private View handleViewTypeSection(int position, View convertView) {
+    private View handleViewTypeSection(int position, View convertView, ViewGroup parent) {
         final Section item = (Section) getItem(position);
         SectionViewHolder holder;
         if (convertView == null) {
@@ -205,6 +206,11 @@ public class AgendaAdapter extends BaseAdapter {
         }
         holder.mSectionTitle.setText(display);
         return convertView;
+    }
+
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return viewType == ITEM_VIEW_TYPE_SECTION;
     }
 
     private static class EventViewHolder {

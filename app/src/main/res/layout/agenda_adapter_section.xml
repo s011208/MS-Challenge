@@ -3,6 +3,7 @@
     android:id="@+id/section_title"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:windowBackground"
     android:fontFamily="sans-serif-condensed"
     android:padding="@dimen/agenda_view_item_padding"
     android:textAllCaps="true"

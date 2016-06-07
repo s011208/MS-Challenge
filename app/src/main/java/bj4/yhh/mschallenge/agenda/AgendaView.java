@@ -2,17 +2,17 @@ package bj4.yhh.mschallenge.agenda;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ListView;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import bj4.yhh.mschallenge.Utilities;
+import bj4.yhh.mschallenge.views.PinnedSectionListView;
 
 /**
  * Created by yenhsunhuang on 2016/6/6.
  */
-public class AgendaView extends ListView {
+public class AgendaView extends PinnedSectionListView {
     private AgendaAdapter mAdapter;
     private Context mContext;
 
