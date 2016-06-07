@@ -74,9 +74,10 @@ public class PinnedSectionListView extends ListView {
     private MotionEvent mDownEvent;
 
     // fields used for drawing shadow under a pinned section
-    private GradientDrawable mShadowDrawable;
+    // disable shadow for ms challenge
+//    private GradientDrawable mShadowDrawable;
     private int mSectionsDistanceY;
-    private int mShadowHeight;
+//    private int mShadowHeight;
 
     /**
      * Delegating listener, can be null.
@@ -178,35 +179,35 @@ public class PinnedSectionListView extends ListView {
     private void initView() {
         setOnScrollListener(mOnScrollListener);
         mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
-        initShadow(true);
+//        initShadow(true);
     }
 
     //-- public API methods
 
-    public void setShadowVisible(boolean visible) {
-        initShadow(visible);
-        if (mPinnedSection != null) {
-            View v = mPinnedSection.view;
-            invalidate(v.getLeft(), v.getTop(), v.getRight(), v.getBottom() + mShadowHeight);
-        }
-    }
+//    public void setShadowVisible(boolean visible) {
+//        initShadow(visible);
+//        if (mPinnedSection != null) {
+//            View v = mPinnedSection.view;
+//            invalidate(v.getLeft(), v.getTop(), v.getRight(), v.getBottom() + mShadowHeight);
+//        }
+//    }
 
     //-- pinned section drawing methods
 
-    public void initShadow(boolean visible) {
-        if (visible) {
-            if (mShadowDrawable == null) {
-                mShadowDrawable = new GradientDrawable(Orientation.TOP_BOTTOM,
-                        new int[]{Color.parseColor("#ffa0a0a0"), Color.parseColor("#50a0a0a0"), Color.parseColor("#00a0a0a0")});
-                mShadowHeight = (int) (8 * getResources().getDisplayMetrics().density);
-            }
-        } else {
-            if (mShadowDrawable != null) {
-                mShadowDrawable = null;
-                mShadowHeight = 0;
-            }
-        }
-    }
+//    public void initShadow(boolean visible) {
+//        if (visible) {
+//            if (mShadowDrawable == null) {
+//                mShadowDrawable = new GradientDrawable(Orientation.TOP_BOTTOM,
+//                        new int[]{Color.parseColor("#ffa0a0a0"), Color.parseColor("#50a0a0a0"), Color.parseColor("#00a0a0a0")});
+//                mShadowHeight = (int) (8 * getResources().getDisplayMetrics().density);
+//            }
+//        } else {
+//            if (mShadowDrawable != null) {
+//                mShadowDrawable = null;
+//                mShadowHeight = 0;
+//            }
+//        }
+//    }
 
     /**
      * Create shadow wrapper with a pinned view for a view at given position
@@ -432,19 +433,19 @@ public class PinnedSectionListView extends ListView {
             canvas.save();
 
             int clipHeight = view.getHeight() +
-                    (mShadowDrawable == null ? 0 : Math.min(mShadowHeight, mSectionsDistanceY));
+                    (/*mShadowDrawable == null ? */0/* : Math.min(mShadowHeight, mSectionsDistanceY)*/);
             canvas.clipRect(pLeft, pTop, pLeft + view.getWidth(), pTop + clipHeight);
 
             canvas.translate(pLeft, pTop + mTranslateY);
             drawChild(canvas, mPinnedSection.view, getDrawingTime());
 
-            if (mShadowDrawable != null && mSectionsDistanceY > 0) {
-                mShadowDrawable.setBounds(mPinnedSection.view.getLeft(),
-                        mPinnedSection.view.getBottom(),
-                        mPinnedSection.view.getRight(),
-                        mPinnedSection.view.getBottom() + mShadowHeight);
-                mShadowDrawable.draw(canvas);
-            }
+//            if (mShadowDrawable != null && mSectionsDistanceY > 0) {
+//                mShadowDrawable.setBounds(mPinnedSection.view.getLeft(),
+//                        mPinnedSection.view.getBottom(),
+//                        mPinnedSection.view.getRight(),
+//                        mPinnedSection.view.getBottom() + mShadowHeight);
+//                mShadowDrawable.draw(canvas);
+//            }
 
             canvas.restore();
         }
