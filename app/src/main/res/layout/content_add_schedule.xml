@@ -248,13 +248,15 @@
                 android:padding="@dimen/schedule_item_padding"
                 android:text="@string/schedule_member"
                 android:textColor="@color/primary_text_color_schedule"
-                android:textSize="@dimen/schedule_primary_text_size" />
+                android:textSize="@dimen/schedule_primary_text_size"
+                android:visibility="gone" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="@dimen/schedule_text_padding_without_icon"
-                android:background="@color/separator_color_schedule" />
+                android:background="@color/separator_color_schedule"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/description"
