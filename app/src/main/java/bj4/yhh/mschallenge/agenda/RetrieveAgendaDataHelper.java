@@ -16,7 +16,7 @@ import bj4.yhh.mschallenge.provider.Schedule;
  */
 public class RetrieveAgendaDataHelper extends AsyncTask<Void, Void, ArrayList<AgendaItem>> {
     private static final String TAG = "RetrieveAgendaHelper";
-    private static final boolean DEBUG = Utilities.DEBUG;
+    private static final boolean DEBUG = false;
 
     public interface Callback {
         void onDataRetrieved(ArrayList<AgendaItem> data);

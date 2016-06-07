@@ -3,6 +3,7 @@ package bj4.yhh.mschallenge.agenda;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,18 +37,41 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
     private long mStartDateTime, mFinishDateTime;
     private final Calendar mCalendar = Calendar.getInstance();
 
-    public AgendaAdapter(Context context, long startDateTime, long finishDateTime) {
+    private Callback mCallback;
+
+    public interface Callback {
+        void onDataLoaded();
+    }
+
+    public AgendaAdapter(Context context, long startDateTime, long finishDateTime, long selectedDateTime, Callback cb) {
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mCalendar.setTimeInMillis(System.currentTimeMillis());
         Utilities.clearCalendarOffset(mCalendar);
-        setDateTimeRange(startDateTime, finishDateTime);
+        mCallback = cb;
+        setDateTimeRange(startDateTime, finishDateTime, selectedDateTime);
     }
 
-    public void setDateTimeRange(long startDateTime, long finishDateTime) {
-        mStartDateTime = startDateTime;
-        mFinishDateTime = finishDateTime;
-        initData();
+    /**
+     * @param startDateTime
+     * @param finishDateTime
+     * @param selectedDateTime
+     * @return whether reload data
+     */
+    public boolean setDateTimeRange(long startDateTime, long finishDateTime, long selectedDateTime) {
+        final boolean isTimeOverlapping = Utilities.isTimeOverlapping(mStartDateTime + Utilities.SECOND, mFinishDateTime - Utilities.SECOND, selectedDateTime, selectedDateTime + Utilities.DAY);
+        if (DEBUG) {
+            Log.v(TAG, "isTimeOverlapping: " + isTimeOverlapping + ", mStartDateTime: " + new SimpleDateFormat("yyyy MM dd").format(mStartDateTime)
+                    + ", mFinishDateTime: " + new SimpleDateFormat("yyyy MM dd").format(mFinishDateTime) + ", selectedDateTime: " + new SimpleDateFormat("yyyy MM dd").format(selectedDateTime));
+        }
+        if (isTimeOverlapping) {
+            return false;
+        } else {
+            mStartDateTime = startDateTime;
+            mFinishDateTime = finishDateTime;
+            initData();
+            return true;
+        }
     }
 
     private void initData() {
@@ -56,6 +80,9 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
             public void onDataRetrieved(ArrayList<AgendaItem> data) {
                 mItems.clear();
                 mItems.addAll(data);
+                if (mCallback != null) {
+                    mCallback.onDataLoaded();
+                }
                 notifyDataSetChanged();
             }
         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
