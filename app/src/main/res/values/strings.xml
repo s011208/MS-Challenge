@@ -35,4 +35,7 @@
     <string name="agenda_view_today">Today</string>
     <string name="agenda_view_tomorrow">Tomorrow</string>
     <string name="agenda_view_no_event">No event</string>
+
+    <!-- calendar activity -->
+    <string name="calendar_activity_add_schedule_success">Add schedule successfully</string>
 </resources>

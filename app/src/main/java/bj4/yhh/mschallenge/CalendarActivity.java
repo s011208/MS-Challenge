@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -47,6 +49,8 @@ public class CalendarActivity extends AppCompatActivity
     private static final boolean IS_SUPPORT_MATERIAL_DESIGN = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     private static final int CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION = 500;
     private static final int REQUEST_ADD_NEW_SCHEDULE = 1000;
+    private static final int SNAKER_BAR_DELAY_TIME = 1000;
+
     private final Calendar mCalendar = Calendar.getInstance();
     private final List<String> mMonthString = Utilities.getMonthString();
     private TextView mMenuMonthText;
@@ -55,6 +59,8 @@ public class CalendarActivity extends AppCompatActivity
     private Date mSelectedDateTime;
     private AgendaView mAgendaView;
     private ValueAnimator mMenuButtonAnimator;
+    private FloatingActionButton mFab;
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +76,8 @@ public class CalendarActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar calendar = Calendar.getInstance();
@@ -185,6 +191,12 @@ public class CalendarActivity extends AppCompatActivity
                 } else {
                     ((AgendaAdapter) mAgendaView.getAdapter()).reloadData();
                 }
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(mFab, R.string.calendar_activity_add_schedule_success, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    }
+                }, SNAKER_BAR_DELAY_TIME);
             }
         }
     }
