@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import bj4.yhh.mschallenge.agenda.AgendaAdapter;
 import bj4.yhh.mschallenge.agenda.AgendaItem;
 import bj4.yhh.mschallenge.agenda.AgendaView;
 import bj4.yhh.mschallenge.agenda.NoEvent;
@@ -169,6 +170,21 @@ public class CalendarActivity extends AppCompatActivity
         if (requestCode == REQUEST_ADD_NEW_SCHEDULE) {
             if (resultCode == Activity.RESULT_OK) {
                 mCalendarPager.requestUpdate();
+                if (data != null) {
+                    long scheduleStartTime = data.getLongExtra(AddScheduleActivity.EXTRA_START_TIME, -1);
+                    long scheduleFinishTime = data.getLongExtra(AddScheduleActivity.EXTRA_FINISH_TIME, -1);
+                    boolean isNewScheduleInAgendaView = Utilities.isTimeOverlapping(scheduleStartTime, scheduleFinishTime, mAgendaView.getStartTime(), mAgendaView.getFinishTime());
+                    if (DEBUG) {
+                        Log.d(TAG, "isNewScheduleInAgendaView: " + isNewScheduleInAgendaView
+                                + ", scheduleStartTime:" + scheduleStartTime + ", scheduleFinishTime:" + scheduleFinishTime
+                                + "\nmAgendaView.getStartTime(): " + mAgendaView.getStartTime() + ", mAgendaView.getFinishTime(): " + mAgendaView.getFinishTime());
+                    }
+                    if (isNewScheduleInAgendaView) {
+                        ((AgendaAdapter) mAgendaView.getAdapter()).reloadData();
+                    }
+                } else {
+                    ((AgendaAdapter) mAgendaView.getAdapter()).reloadData();
+                }
             }
         }
     }

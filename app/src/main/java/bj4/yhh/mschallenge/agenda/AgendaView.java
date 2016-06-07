@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.AbsListView;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,12 +23,14 @@ public class AgendaView extends PinnedSectionListView {
     private long mDefaultSelectedTime;
     private AgendaAdapter.Callback mOnDataLoadedListener = new AgendaAdapter.Callback() {
         @Override
-        public void onDataLoaded() {
+        public void onDataLoaded(boolean reload) {
+            if (reload) return;
             updateSelection();
         }
     };
     private Callback mCallback;
     private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
+    private long mStartTime, mFinishTime;
 
     public AgendaView(Context context) {
         this(context, null);
@@ -84,6 +85,8 @@ public class AgendaView extends PinnedSectionListView {
                 updateSelection();
             }
         }
+        mStartTime = startDateTime;
+        mFinishTime = finishDateTime;
     }
 
     private int findIndexOfSelectedDateTime() {
@@ -132,6 +135,14 @@ public class AgendaView extends PinnedSectionListView {
         if (index != -1) {
             setSelection(index);
         }
+    }
+
+    public long getStartTime() {
+        return mStartTime;
+    }
+
+    public long getFinishTime() {
+        return mFinishTime;
     }
 
     public interface Callback {

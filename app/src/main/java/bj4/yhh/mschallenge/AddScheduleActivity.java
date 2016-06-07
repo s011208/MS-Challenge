@@ -9,6 +9,7 @@ import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -41,15 +42,15 @@ import bj4.yhh.mschallenge.provider.TableScheduleContent;
 public class AddScheduleActivity extends AppCompatActivity implements View.OnClickListener,
         ScheduleDescriptionDialog.Callback {
 
-    private static final String TAG = "AddScheduleActivity";
-    private static final boolean DEBUG = Utilities.DEBUG;
-
     public static final String EXTRA_YEAR = "e_year";
     public static final String EXTRA_MONTH = "e_month";
     public static final String EXTRA_DAY = "e_day";
     public static final String EXTRA_HOUR = "e_hour";
     public static final String EXTRA_MINUTE = "e_minute";
-
+    public static final String EXTRA_START_TIME = "e_start_time";
+    public static final String EXTRA_FINISH_TIME = "e_finish_time";
+    private static final String TAG = "AddScheduleActivity";
+    private static final boolean DEBUG = Utilities.DEBUG;
     private static final long HOUR = Utilities.HOUR;
     private static final long DAY = Utilities.DAY;
 
@@ -297,7 +298,10 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
 
         getContentResolver().insert(TableScheduleContent.URI, cv);
 
-        setResult(Activity.RESULT_OK);
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_START_TIME, mStartDateData.getTime());
+        intent.putExtra(EXTRA_FINISH_TIME, mFinishDateData.getTime());
+        setResult(Activity.RESULT_OK, intent);
         finish();
     }
 

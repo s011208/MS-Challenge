@@ -23,25 +23,18 @@ import bj4.yhh.mschallenge.views.PinnedSectionListView;
  * Created by yenhsunhuang on 2016/6/6.
  */
 public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.PinnedSectionListAdapter {
-    private static final boolean DEBUG = Utilities.DEBUG;
-    private static final String TAG = "AgendaAdapter";
-
     public static final int ITEM_VIEW_TYPE_SECTION = 0;
     public static final int ITEM_VIEW_TYPE_EVENT = 1;
     public static final int ITEM_VIEW_TYPE_WEATHER = 2;
     public static final int ITEM_VIEW_TYPE_NO_EVENT = 3;
-
+    private static final boolean DEBUG = Utilities.DEBUG;
+    private static final String TAG = "AgendaAdapter";
     private final Context mContext;
     private final LayoutInflater mInflater;
     private final ArrayList<AgendaItem> mItems = new ArrayList<>();
-    private long mStartDateTime, mFinishDateTime;
     private final Calendar mCalendar = Calendar.getInstance();
-
+    private long mStartDateTime, mFinishDateTime;
     private Callback mCallback;
-
-    public interface Callback {
-        void onDataLoaded();
-    }
 
     public AgendaAdapter(Context context, long startDateTime, long finishDateTime, long selectedDateTime, Callback cb) {
         mContext = context;
@@ -69,19 +62,26 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
         } else {
             mStartDateTime = startDateTime;
             mFinishDateTime = finishDateTime;
-            initData();
+            initData(false);
             return true;
         }
     }
 
-    private void initData() {
+    /**
+     * reload data with the same range of time
+     */
+    public void reloadData() {
+        initData(true);
+    }
+
+    private void initData(final boolean reload) {
         new RetrieveAgendaDataHelper(mContext, mStartDateTime, mFinishDateTime, new RetrieveAgendaDataHelper.Callback() {
             @Override
             public void onDataRetrieved(ArrayList<AgendaItem> data) {
                 mItems.clear();
                 mItems.addAll(data);
                 if (mCallback != null) {
-                    mCallback.onDataLoaded();
+                    mCallback.onDataLoaded(reload);
                 }
                 notifyDataSetChanged();
             }
@@ -238,6 +238,10 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
     @Override
     public boolean isItemViewTypePinned(int viewType) {
         return viewType == ITEM_VIEW_TYPE_SECTION;
+    }
+
+    public interface Callback {
+        void onDataLoaded(boolean reload);
     }
 
     private static class EventViewHolder {
