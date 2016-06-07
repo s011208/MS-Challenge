@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -75,10 +74,7 @@ public class CalendarPagerAdapter extends PagerAdapter {
         return POSITION_NONE;
     }
 
-    public void setSelectedDate(Date selectedDate) {
-        Iterator<CalendarDateView> iterator = mViewsMap.values().iterator();
-        while (iterator.hasNext()) {
-            iterator.next().updateSelectedDate(selectedDate);
-        }
+    public void setSelectedDate(Date selectedDate, int position) {
+        mViewsMap.get(position).updateSelectedDate(selectedDate);
     }
 }

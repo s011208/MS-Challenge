@@ -326,7 +326,7 @@ public class PinnedSectionListView extends ListView {
         return -1;
     }
 
-    int findCurrentSectionPosition(int fromPosition) {
+    public int findCurrentSectionPosition(int fromPosition) {
         ListAdapter adapter = getAdapter();
 
         if (fromPosition >= adapter.getCount()) return -1; // dataset has changed, no candidate

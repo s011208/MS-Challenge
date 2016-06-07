@@ -1,7 +1,6 @@
 package bj4.yhh.mschallenge.calendar;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -77,7 +76,11 @@ public class CalendarPager extends ViewPager {
     }
 
     public void setSelectedDate(Date selectedDate) {
+        setSelectedDate(selectedDate, getCurrentItem());
+    }
+
+    public void setSelectedDate(Date selectedDate, int position) {
         if (mPagerAdapter == null) return;
-        mPagerAdapter.setSelectedDate(selectedDate);
+        mPagerAdapter.setSelectedDate(selectedDate, position);
     }
 }

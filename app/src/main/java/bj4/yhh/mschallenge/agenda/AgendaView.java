@@ -3,6 +3,7 @@ package bj4.yhh.mschallenge.agenda;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.AbsListView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,18 +20,22 @@ public class AgendaView extends PinnedSectionListView {
     private static final boolean DEBUG = Utilities.DEBUG;
     private static final int DEFAULT_LIST_RANGE = 7;
 
+    public interface Callback {
+        void onSectionItemChanged(long newItemDateTime);
+    }
+
     private AgendaAdapter mAdapter;
     private Context mContext;
     private long mDefaultSelectedTime;
     private AgendaAdapter.Callback mOnDataLoadedListener = new AgendaAdapter.Callback() {
         @Override
         public void onDataLoaded() {
-            int index = findIndexOfSelectedDateTime();
-            if (index != -1) {
-                smoothScrollToPosition(index);
-            }
+            updateSelection();
         }
     };
+
+    private Callback mCallback;
+    private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
 
     public AgendaView(Context context) {
         this(context, null);
@@ -47,6 +52,32 @@ public class AgendaView extends PinnedSectionListView {
         calendar.setTimeInMillis(System.currentTimeMillis());
         Utilities.clearCalendarOffset(calendar);
         setDate(calendar);
+        setOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                mScrollState = scrollState;
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int sectionPosition = findCurrentSectionPosition(firstVisibleItem);
+                if (sectionPosition > -1) {
+                    AgendaItem item = mAdapter.getItem(sectionPosition);
+                    if (DEBUG) {
+                        Log.d(TAG, "sectionPosition: " + sectionPosition
+                                + ", date: " + new SimpleDateFormat("yyyy MM dd").format(((Section) item).getDateTime())
+                                + ", mScrollState: " + mScrollState);
+                    }
+                    if (mCallback != null && mScrollState != OnScrollListener.SCROLL_STATE_IDLE) {
+                        mCallback.onSectionItemChanged(((Section) item).getDateTime());
+                    }
+                }
+            }
+        });
+    }
+
+    public void setCallback(Callback cb) {
+        mCallback = cb;
     }
 
     private void setDate(long startDateTime, long finishDateTime, long selectedDateTime) {
@@ -56,10 +87,7 @@ public class AgendaView extends PinnedSectionListView {
             setAdapter(mAdapter);
         } else {
             if (!mAdapter.setDateTimeRange(startDateTime, finishDateTime, selectedDateTime)) {
-                int index = findIndexOfSelectedDateTime();
-                if (index != -1) {
-                    setSelection(index);
-                }
+                updateSelection();
             }
         }
     }
@@ -93,5 +121,12 @@ public class AgendaView extends PinnedSectionListView {
         calendar.add(Calendar.DAY_OF_MONTH, DEFAULT_LIST_RANGE * 2 + 1);
         final long finishTime = calendar.getTimeInMillis();
         setDate(startTime, finishTime, selectedTime);
+    }
+
+    private void updateSelection() {
+        int index = findIndexOfSelectedDateTime();
+        if (index != -1) {
+            setSelection(index);
+        }
     }
 }

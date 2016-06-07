@@ -17,7 +17,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,7 +46,7 @@ public class CalendarActivity extends AppCompatActivity
     private TextView mMenuMonthText;
     private boolean mIsShowCalendar = false;
     private CalendarPager mCalendarPager;
-    private Date mSelectedDate;
+    private Date mSelectedDateTime;
     private AgendaView mAgendaView;
     private ValueAnimator mMenuButtonAnimator;
 
@@ -57,7 +56,7 @@ public class CalendarActivity extends AppCompatActivity
         setContentView(R.layout.activity_calendar);
         mCalendar.setTimeInMillis(System.currentTimeMillis());
         Utilities.clearCalendarOffset(mCalendar);
-        mSelectedDate = mCalendar.getTime();
+        mSelectedDateTime = mCalendar.getTime();
         initComponents();
     }
 
@@ -71,7 +70,7 @@ public class CalendarActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent startIntent = new Intent(CalendarActivity.this, AddScheduleActivity.class);
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(mSelectedDate);
+                calendar.setTime(mSelectedDateTime);
                 startIntent.putExtra(AddScheduleActivity.EXTRA_YEAR, calendar.get(Calendar.YEAR));
                 startIntent.putExtra(AddScheduleActivity.EXTRA_MONTH, calendar.get(Calendar.MONTH));
                 startIntent.putExtra(AddScheduleActivity.EXTRA_DAY, calendar.get(Calendar.DAY_OF_MONTH));
@@ -103,6 +102,7 @@ public class CalendarActivity extends AppCompatActivity
                     text += " " + value[0];
                 }
                 mMenuMonthText.setText(text);
+                mCalendarPager.setSelectedDate(mSelectedDateTime, position);
             }
 
             @Override
@@ -111,7 +111,16 @@ public class CalendarActivity extends AppCompatActivity
         });
 
         mAgendaView = (AgendaView) findViewById(R.id.agenda_view);
-        mAgendaView.setDate(mSelectedDate);
+        mAgendaView.setCallback(new AgendaView.Callback() {
+            @Override
+            public void onSectionItemChanged(long newItemDateTime) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(newItemDateTime);
+                mSelectedDateTime = calendar.getTime();
+                mCalendarPager.setSelectedDate(calendar.getTime());
+            }
+        });
+        mAgendaView.setDate(mSelectedDateTime);
     }
 
     private void initCustomActionBar() {
@@ -131,9 +140,6 @@ public class CalendarActivity extends AppCompatActivity
         mMenuMonthText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (DEBUG) {
-                    Log.d(TAG, "mMenuMonthText onClick");
-                }
                 mIsShowCalendar = !mIsShowCalendar;
                 updateMenuChevronIcon(true);
                 switchCalendarVisibility();
@@ -318,13 +324,13 @@ public class CalendarActivity extends AppCompatActivity
 
     @Override
     public void onDaySelected(Date date) {
-        mSelectedDate = date;
+        mSelectedDateTime = date;
         mCalendarPager.setSelectedDate(date);
-        mAgendaView.setDate(mSelectedDate);
+        mAgendaView.setDate(mSelectedDateTime);
     }
 
     @Override
     public Date getSelectedDate() {
-        return mSelectedDate;
+        return mSelectedDateTime;
     }
 }
