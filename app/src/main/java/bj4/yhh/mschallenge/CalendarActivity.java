@@ -109,7 +109,7 @@ public class CalendarActivity extends AppCompatActivity
         });
 
         mAgendaView = (AgendaView) findViewById(R.id.agenda_view);
-        mAgendaView.update(mSelectedDate);
+        mAgendaView.setDate(mSelectedDate);
     }
 
     private void initCustomActionBar() {
@@ -255,7 +255,7 @@ public class CalendarActivity extends AppCompatActivity
         mSelectedDate = date;
         mCalendarPager.setSelectedDate(date);
         Log.e("QQQQ", "onDaySelected");
-        mAgendaView.update(mSelectedDate);
+        mAgendaView.setDate(mSelectedDate);
     }
 
     @Override

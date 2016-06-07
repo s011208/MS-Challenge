@@ -30,10 +30,10 @@ public class AgendaView extends ListView {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         Utilities.clearCalendarOffset(calendar);
-        update(calendar);
+        setDate(calendar);
     }
 
-    private void update(long startDateTime, long finishDateTime) {
+    private void setDate(long startDateTime, long finishDateTime) {
         if (mAdapter == null) {
             mAdapter = new AgendaAdapter(mContext, startDateTime, finishDateTime);
             setAdapter(mAdapter);
@@ -42,18 +42,18 @@ public class AgendaView extends ListView {
         }
     }
 
-    public void update(Date date) {
+    public void setDate(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         Utilities.clearCalendarOffset(calendar);
-        update(calendar);
+        setDate(calendar);
     }
 
-    public void update(Calendar calendar) {
+    public void setDate(Calendar calendar) {
         calendar.add(Calendar.DAY_OF_MONTH, -7);
         final long startTime = calendar.getTimeInMillis();
         calendar.add(Calendar.DAY_OF_MONTH, 14);
         final long finishTime = calendar.getTimeInMillis();
-        update(startTime, finishTime);
+        setDate(startTime, finishTime);
     }
 }
