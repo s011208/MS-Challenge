@@ -86,7 +86,7 @@ public class AgendaAdapter extends BaseAdapter {
                 convertView = handleViewTypeEvent(position, convertView);
                 break;
             case ITEM_VIEW_TYPE_NO_EVENT:
-                convertView = handleViewTypeNoEvnet(position, convertView);
+                convertView = handleViewTypeNoEvent(position, convertView);
                 break;
         }
         return convertView;
@@ -158,7 +158,7 @@ public class AgendaAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private View handleViewTypeNoEvnet(int position, View convertView) {
+    private View handleViewTypeNoEvent(int position, View convertView) {
         final NoEvent item = (NoEvent) getItem(position);
         NoEventViewHolder holder;
         if (convertView == null) {
@@ -183,9 +183,14 @@ public class AgendaAdapter extends BaseAdapter {
         } else {
             holder = (SectionViewHolder) convertView.getTag();
         }
-        String display = new SimpleDateFormat("EEEE, MMMM dd").format(item.getDateTime());
+        String display;
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(item.getDateTime());
+        if (mCalendar.get(Calendar.YEAR) != calendar.get(Calendar.YEAR)) {
+            display = new SimpleDateFormat("EEEE, MMMM dd, yyyy").format(item.getDateTime());
+        } else {
+            display = new SimpleDateFormat("EEEE, MMMM dd").format(item.getDateTime());
+        }
         if (calendar.get(Calendar.MONTH) == mCalendar.get(Calendar.MONTH)
                 && calendar.get(Calendar.YEAR) == mCalendar.get(Calendar.YEAR)) {
             int currentDay = mCalendar.get(Calendar.DAY_OF_MONTH);
