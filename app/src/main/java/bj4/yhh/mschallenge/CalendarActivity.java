@@ -320,7 +320,6 @@ public class CalendarActivity extends AppCompatActivity
     public void onDaySelected(Date date) {
         mSelectedDate = date;
         mCalendarPager.setSelectedDate(date);
-        Log.e("QQQQ", "onDaySelected");
         mAgendaView.setDate(mSelectedDate);
     }
 
