@@ -1,5 +1,7 @@
 package bj4.yhh.mschallenge;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,8 +22,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -48,6 +49,7 @@ public class CalendarActivity extends AppCompatActivity
     private CalendarPager mCalendarPager;
     private Date mSelectedDate;
     private AgendaView mAgendaView;
+    private ValueAnimator mMenuButtonAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,18 +180,82 @@ public class CalendarActivity extends AppCompatActivity
     }
 
     private void switchCalendarVisibility() {
-        mCalendarPager.animate().cancel();
+        if (mMenuButtonAnimator != null && mMenuButtonAnimator.isRunning()) {
+            mMenuButtonAnimator.cancel();
+        }
         if (mIsShowCalendar) {
-            mCalendarPager.animate()
-                    .setInterpolator(new DecelerateInterpolator())
-                    .translationY(-mCalendarPager.getHeight())
-                    .setDuration(CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION)
-                    .start();
+            mMenuButtonAnimator = new ValueAnimator().ofFloat(1f, 0f);
+            mMenuButtonAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    Float value = (Float) animation.getAnimatedValue();
+                    mCalendarPager.setTranslationY(-mCalendarPager.getHeight() * value);
+                }
+            });
+            mMenuButtonAnimator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    if (mCalendarPager.getVisibility() != View.VISIBLE) {
+                        mCalendarPager.setVisibility(View.VISIBLE);
+                    }
+                    RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) mAgendaView.getLayoutParams();
+                    param.addRule(RelativeLayout.BELOW, mCalendarPager.getId());
+                    ((RelativeLayout) mAgendaView.getParent()).updateViewLayout(mAgendaView, param);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            mMenuButtonAnimator.setDuration(CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION);
+            mMenuButtonAnimator.start();
         } else {
-            mCalendarPager.animate()
-                    .setInterpolator(new AccelerateInterpolator())
-                    .translationY(0)
-                    .setDuration(CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION).start();
+            mMenuButtonAnimator = new ValueAnimator().ofFloat(0f, 1f);
+            final RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) mAgendaView.getLayoutParams();
+            param.addRule(RelativeLayout.BELOW, 0);
+            mMenuButtonAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    Float value = (Float) animation.getAnimatedValue();
+                    mCalendarPager.setTranslationY(-mCalendarPager.getHeight() * value);
+                }
+            });
+            mMenuButtonAnimator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) mAgendaView.getLayoutParams();
+                    param.addRule(RelativeLayout.BELOW, 0);
+                    ((RelativeLayout) mAgendaView.getParent()).updateViewLayout(mAgendaView, param);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            mMenuButtonAnimator.setDuration(CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION);
+            mMenuButtonAnimator.start();
         }
     }
 

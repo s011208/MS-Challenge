@@ -15,7 +15,8 @@
     <bj4.yhh.mschallenge.calendar.CalendarPager
         android:id="@+id/calendar_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></bj4.yhh.mschallenge.calendar.CalendarPager>
+        android:layout_height="wrap_content"
+        android:visibility="invisible"></bj4.yhh.mschallenge.calendar.CalendarPager>
 
 
     <bj4.yhh.mschallenge.agenda.AgendaView
@@ -23,7 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/calendar_pager"
         android:divider="#ffcccccc"
         android:dividerHeight="1dp"
         android:listSelector="?android:selectableItemBackground"></bj4.yhh.mschallenge.agenda.AgendaView>

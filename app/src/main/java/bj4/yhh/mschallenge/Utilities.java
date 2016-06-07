@@ -106,6 +106,12 @@ public class Utilities {
             final int endIndex = (Calendar.DAY_OF_WEEK - dayOfWeekOfLastDay) + Calendar.DAY_OF_WEEK;
             rtn.addAll(nextDates.subList(startIndex, endIndex));
         }
+        if (rtn.size() > 42 /*constrain in 6 line*/) {
+            for (int i = 42; i < rtn.size(); ++i) {
+                rtn.remove(i);
+                --i;
+            }
+        }
         return rtn;
     }
 
