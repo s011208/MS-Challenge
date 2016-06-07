@@ -61,8 +61,8 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
     public boolean setDateTimeRange(long startDateTime, long finishDateTime, long selectedDateTime) {
         final boolean isTimeOverlapping = Utilities.isTimeOverlapping(mStartDateTime + Utilities.SECOND, mFinishDateTime - Utilities.SECOND, selectedDateTime, selectedDateTime + Utilities.DAY);
         if (DEBUG) {
-            Log.v(TAG, "isTimeOverlapping: " + isTimeOverlapping + ", mStartDateTime: " + new SimpleDateFormat("yyyy MM dd").format(mStartDateTime)
-                    + ", mFinishDateTime: " + new SimpleDateFormat("yyyy MM dd").format(mFinishDateTime) + ", selectedDateTime: " + new SimpleDateFormat("yyyy MM dd").format(selectedDateTime));
+            Log.v(TAG, "isTimeOverlapping: " + isTimeOverlapping + ", mStartDateTime: " + Utilities.debugDateTime(mStartDateTime)
+                    + ", mFinishDateTime: " + Utilities.debugDateTime(mFinishDateTime) + ", selectedDateTime: " + Utilities.debugDateTime(selectedDateTime));
         }
         if (isTimeOverlapping) {
             return false;

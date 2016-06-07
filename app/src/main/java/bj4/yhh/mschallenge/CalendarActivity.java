@@ -17,10 +17,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,7 +30,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import bj4.yhh.mschallenge.agenda.AgendaItem;
 import bj4.yhh.mschallenge.agenda.AgendaView;
+import bj4.yhh.mschallenge.agenda.NoEvent;
+import bj4.yhh.mschallenge.agenda.Section;
 import bj4.yhh.mschallenge.calendar.CalendarDateView;
 import bj4.yhh.mschallenge.calendar.CalendarPager;
 
@@ -68,13 +73,9 @@ public class CalendarActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent startIntent = new Intent(CalendarActivity.this, AddScheduleActivity.class);
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(mSelectedDateTime);
-                startIntent.putExtra(AddScheduleActivity.EXTRA_YEAR, calendar.get(Calendar.YEAR));
-                startIntent.putExtra(AddScheduleActivity.EXTRA_MONTH, calendar.get(Calendar.MONTH));
-                startIntent.putExtra(AddScheduleActivity.EXTRA_DAY, calendar.get(Calendar.DAY_OF_MONTH));
-                startActivityForResult(startIntent, REQUEST_ADD_NEW_SCHEDULE);
+                startAddScheduleActivityForResult(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
             }
         });
 
@@ -121,6 +122,21 @@ public class CalendarActivity extends AppCompatActivity
             }
         });
         mAgendaView.setDate(mSelectedDateTime);
+        mAgendaView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AgendaItem item = (AgendaItem) mAgendaView.getAdapter().getItem(position);
+                if (item instanceof NoEvent) {
+                    Section section = mAgendaView.findSectionOfItem(position);
+                    if (DEBUG) {
+                        Log.d(TAG, "section: " + Utilities.debugDateTime(section.getDateTime()) + ", position: " + position);
+                    }
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(section.getDateTime());
+                    startAddScheduleActivityForResult(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                }
+            }
+        });
     }
 
     private void initCustomActionBar() {
@@ -332,5 +348,13 @@ public class CalendarActivity extends AppCompatActivity
     @Override
     public Date getSelectedDate() {
         return mSelectedDateTime;
+    }
+
+    private void startAddScheduleActivityForResult(int y, int m, int d) {
+        Intent startIntent = new Intent(CalendarActivity.this, AddScheduleActivity.class);
+        startIntent.putExtra(AddScheduleActivity.EXTRA_YEAR, y);
+        startIntent.putExtra(AddScheduleActivity.EXTRA_MONTH, m);
+        startIntent.putExtra(AddScheduleActivity.EXTRA_DAY, d);
+        startActivityForResult(startIntent, REQUEST_ADD_NEW_SCHEDULE);
     }
 }

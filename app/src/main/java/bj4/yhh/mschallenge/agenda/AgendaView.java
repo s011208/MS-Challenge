@@ -19,11 +19,6 @@ public class AgendaView extends PinnedSectionListView {
     private static final String TAG = "AgendaView";
     private static final boolean DEBUG = Utilities.DEBUG;
     private static final int DEFAULT_LIST_RANGE = 7;
-
-    public interface Callback {
-        void onSectionItemChanged(long newItemDateTime);
-    }
-
     private AgendaAdapter mAdapter;
     private Context mContext;
     private long mDefaultSelectedTime;
@@ -33,7 +28,6 @@ public class AgendaView extends PinnedSectionListView {
             updateSelection();
         }
     };
-
     private Callback mCallback;
     private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
 
@@ -65,7 +59,7 @@ public class AgendaView extends PinnedSectionListView {
                     AgendaItem item = mAdapter.getItem(sectionPosition);
                     if (DEBUG) {
                         Log.d(TAG, "sectionPosition: " + sectionPosition
-                                + ", date: " + new SimpleDateFormat("yyyy MM dd").format(((Section) item).getDateTime())
+                                + ", date: " + Utilities.debugDateTime(((Section) item).getDateTime())
                                 + ", mScrollState: " + mScrollState);
                     }
                     if (mCallback != null && mScrollState != OnScrollListener.SCROLL_STATE_IDLE) {
@@ -98,13 +92,23 @@ public class AgendaView extends PinnedSectionListView {
             if (item instanceof Section) {
                 if (((Section) item).getDateTime() == mDefaultSelectedTime) {
                     if (DEBUG) {
-                        Log.v(TAG, "index: " + i + ", time: " + new SimpleDateFormat("yyyy MM dd").format(((Section) item).getDateTime()));
+                        Log.v(TAG, "index: " + i + ", time: " + Utilities.debugDateTime(((Section) item).getDateTime()));
                     }
                     return i;
                 }
             }
         }
         return -1;
+    }
+
+    public Section findSectionOfItem(int position) {
+        for (int i = position; i >= 0; --i) {
+            final AgendaItem item = mAdapter.getItem(i);
+            if (item instanceof Section) {
+                return (Section) item;
+            }
+        }
+        return null;
     }
 
     public void setDate(Date date) {
@@ -128,5 +132,9 @@ public class AgendaView extends PinnedSectionListView {
         if (index != -1) {
             setSelection(index);
         }
+    }
+
+    public interface Callback {
+        void onSectionItemChanged(long newItemDateTime);
     }
 }

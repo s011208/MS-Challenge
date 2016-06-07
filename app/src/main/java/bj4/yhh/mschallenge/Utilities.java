@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -142,6 +143,9 @@ public class Utilities {
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.HOUR_OF_DAY, 0);
-//        c.set(Calendar.HOUR, 0);
+    }
+
+    public static String debugDateTime(long time) {
+        return new SimpleDateFormat("yyyy MM dd").format(time);
     }
 }
