@@ -8,17 +8,15 @@
     android:padding="@dimen/agenda_view_item_padding">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingRight="24dp">
+        android:layout_weight="2"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="24dp"
-            android:drawableRight="@drawable/add_schedule_title_drawable"
             android:paddingBottom="2dp"
             android:textSize="@dimen/agenda_view_event_secondary_title_text_size" />
 
@@ -30,16 +28,27 @@
             android:textSize="@dimen/agenda_view_event_secondary_title_text_size" />
     </LinearLayout>
 
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingTop="5dp"
+        android:scaleType="center"
+        android:src="@drawable/add_schedule_title_drawable" />
+
     <LinearLayout
         android:id="@+id/title_area"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="5"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:paddingBottom="4dp"
             android:textSize="@dimen/agenda_view_event_title_text_size" />
 
@@ -49,7 +58,9 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_map_marker_grey600_18dp"
             android:drawablePadding="4dp"
+            android:ellipsize="end"
             android:gravity="center_vertical"
+            android:maxLines="2"
             android:textColor="#ff888888"
             android:textSize="@dimen/agenda_view_event_secondary_title_text_size" />
     </LinearLayout>
