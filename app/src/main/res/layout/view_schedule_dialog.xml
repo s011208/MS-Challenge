@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/schedule_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary_schedule"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="@integer/view_schedule_dialog_title_max_line"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:padding="16dp"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/view_schedule_dialog_title_text_size" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/schedule_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_clock_grey600_24dp"
+                android:drawablePadding="@dimen/view_schedule_dialog_drawable_padding"
+                android:gravity="center_vertical"
+                android:minHeight="?android:attr/listPreferredItemHeight"
+                android:textSize="@dimen/view_schedule_dialog_text_size" />
+
+            <TextView
+                android:id="@+id/schedule_notify"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_bell_grey600_24dp"
+                android:drawablePadding="@dimen/view_schedule_dialog_drawable_padding"
+                android:gravity="center_vertical"
+                android:minHeight="?android:attr/listPreferredItemHeight"
+                android:textSize="@dimen/view_schedule_dialog_text_size" />
+
+            <TextView
+                android:id="@+id/schedule_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:drawableLeft="@drawable/ic_library_books_grey600_24dp"
+                android:drawablePadding="@dimen/view_schedule_dialog_drawable_padding"
+                android:gravity="center_vertical"
+                android:minHeight="?android:attr/listPreferredItemHeight"
+                android:textSize="@dimen/view_schedule_dialog_text_size" />
+
+            <TextView
+                android:id="@+id/schedule_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_map_marker_grey600_24dp"
+                android:drawablePadding="@dimen/view_schedule_dialog_drawable_padding"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="@integer/view_schedule_dialog_title_max_line"
+                android:minHeight="?android:attr/listPreferredItemHeight"
+                android:textSize="@dimen/view_schedule_dialog_text_size" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

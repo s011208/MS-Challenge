@@ -2,6 +2,9 @@ package bj4.yhh.mschallenge.provider;
 
 import android.database.Cursor;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -24,6 +27,18 @@ public class Schedule {
         mLocation = location;
         mMember = member;
         mDescription = description;
+    }
+
+    public Schedule(JSONObject json) throws JSONException {
+        this(json.getLong(TableScheduleContent.COLUMN_ID),
+                json.getString(TableScheduleContent.COLUMN_TITLE),
+                json.getBoolean(TableScheduleContent.COLUMN_IS_WHOLE_DAY),
+                json.getLong(TableScheduleContent.COLUMN_START_TIME),
+                json.getLong(TableScheduleContent.COLUMN_FINISH_TIME),
+                json.getInt(TableScheduleContent.COLUMN_NOTIFY),
+                json.getString(TableScheduleContent.COLUMN_LOCATION) == JSONObject.NULL ? null : json.getString(TableScheduleContent.COLUMN_LOCATION),
+                json.getString(TableScheduleContent.COLUMN_MEMBER) == JSONObject.NULL ? null : json.getString(TableScheduleContent.COLUMN_MEMBER),
+                json.getString(TableScheduleContent.COLUMN_DESCRIPTION) == JSONObject.NULL ? null : json.getString(TableScheduleContent.COLUMN_DESCRIPTION));
     }
 
     public long getId() {
@@ -95,6 +110,24 @@ public class Schedule {
 
     @Override
     public String toString() {
-        return "title: " + mTitle + ", startTime: " + mStartTime + ", finishTime: " + mFinishTime;
+        return toJson().toString();
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put(TableScheduleContent.COLUMN_ID, mId);
+            json.put(TableScheduleContent.COLUMN_DESCRIPTION, mDescription == null ? JSONObject.NULL : mDescription);
+            json.put(TableScheduleContent.COLUMN_FINISH_TIME, mFinishTime);
+            json.put(TableScheduleContent.COLUMN_START_TIME, mStartTime);
+            json.put(TableScheduleContent.COLUMN_IS_WHOLE_DAY, mIsWholeDay);
+            json.put(TableScheduleContent.COLUMN_LOCATION, mLocation == null ? JSONObject.NULL : mLocation);
+            json.put(TableScheduleContent.COLUMN_MEMBER, mMember == null ? JSONObject.NULL : mMember);
+            json.put(TableScheduleContent.COLUMN_NOTIFY, mNotify);
+            json.put(TableScheduleContent.COLUMN_TITLE, mTitle);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 }

@@ -294,8 +294,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         cv.put(TableScheduleContent.COLUMN_LOCATION, mLocation.getText().toString());
         cv.put(TableScheduleContent.COLUMN_NOTIFY, mNotifyDataIndex);
         cv.put(TableScheduleContent.COLUMN_MEMBER, "");
-        cv.put(TableScheduleContent.COLUMN_DESCRIPTION, mDescriptionData);
-
+        cv.put(TableScheduleContent.COLUMN_DESCRIPTION, mDescriptionData == null ? "" : mDescriptionData);
         getContentResolver().insert(TableScheduleContent.URI, cv);
 
         Intent intent = new Intent();

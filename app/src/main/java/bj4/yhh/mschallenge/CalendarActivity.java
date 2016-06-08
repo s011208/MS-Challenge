@@ -35,14 +35,17 @@ import java.util.List;
 import bj4.yhh.mschallenge.agenda.AgendaAdapter;
 import bj4.yhh.mschallenge.agenda.AgendaItem;
 import bj4.yhh.mschallenge.agenda.AgendaView;
+import bj4.yhh.mschallenge.agenda.Event;
 import bj4.yhh.mschallenge.agenda.NoEvent;
 import bj4.yhh.mschallenge.agenda.Section;
 import bj4.yhh.mschallenge.calendar.CalendarDateView;
 import bj4.yhh.mschallenge.calendar.CalendarPager;
+import bj4.yhh.mschallenge.dialogs.ViewScheduleDialog;
+import bj4.yhh.mschallenge.provider.Schedule;
 
 public class CalendarActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        CalendarDateView.Callback {
+        CalendarDateView.Callback, ViewScheduleDialog.Callback {
 
     private static final String TAG = "CalendarActivity";
     private static final boolean DEBUG = Utilities.DEBUG;
@@ -141,6 +144,15 @@ public class CalendarActivity extends AppCompatActivity
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTimeInMillis(section.getDateTime());
                     startAddScheduleActivityForResult(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                } else if (item instanceof Event) {
+                    Section section = mAgendaView.findSectionOfItem(position);
+                    Event event = (Event) item;
+                    ViewScheduleDialog dialog = new ViewScheduleDialog();
+                    Bundle arguments = new Bundle();
+                    arguments.putString(ViewScheduleDialog.ARGUMENT_SCHEDULE, event.getSchedule().toString());
+                    arguments.putLong(ViewScheduleDialog.ARGUMENT_SECTION_TIME, section.getDateTime());
+                    dialog.setArguments(arguments);
+                    dialog.show(getFragmentManager(), ViewScheduleDialog.class.getName());
                 }
             }
         });
@@ -384,5 +396,17 @@ public class CalendarActivity extends AppCompatActivity
         startIntent.putExtra(AddScheduleActivity.EXTRA_MONTH, m);
         startIntent.putExtra(AddScheduleActivity.EXTRA_DAY, d);
         startActivityForResult(startIntent, REQUEST_ADD_NEW_SCHEDULE);
+    }
+
+    @Override
+    public void onScheduleDialogPositiveClick(Schedule schedule) {
+        if (DEBUG) {
+            Log.d(TAG, "onScheduleDialogPositiveClick schedule: " + schedule);
+        }
+    }
+
+    @Override
+    public void onScheduleDialogNegativeClick() {
+        // do noting when negative button click
     }
 }
