@@ -29,11 +29,15 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import bj4.yhh.mschallenge.dialogs.ScheduleDescriptionDialog;
+import bj4.yhh.mschallenge.provider.Schedule;
 import bj4.yhh.mschallenge.provider.TableScheduleContent;
 
 /**
@@ -49,6 +53,9 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
     public static final String EXTRA_MINUTE = "e_minute";
     public static final String EXTRA_START_TIME = "e_start_time";
     public static final String EXTRA_FINISH_TIME = "e_finish_time";
+    public static final String EXTRA_SCHEDULE = "e_schedule";
+    public static final String EXTRA_ID = "e_id";
+
     private static final String TAG = "AddScheduleActivity";
     private static final boolean DEBUG = Utilities.DEBUG;
     private static final long HOUR = Utilities.HOUR;
@@ -68,8 +75,10 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
 
     private String[] mNotifyStringArray;
     private int mNotifyDataIndex = TableScheduleContent.SCHEDULE_NOTIFY_NONE;
+    private long mUpdateId = -1;
 
-    private String mDescriptionData;
+    private String mDescriptionData, mLocationData, mTitleData;
+    private boolean mIsWholeDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,29 +87,50 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         int year, month, day, hour, minute;
-        if (getIntent() != null) {
-            year = getIntent().getIntExtra(EXTRA_YEAR, calendar.get(Calendar.YEAR));
-            month = getIntent().getIntExtra(EXTRA_MONTH, calendar.get(Calendar.MONTH));
-            day = getIntent().getIntExtra(EXTRA_DAY, calendar.get(Calendar.DAY_OF_MONTH));
-            hour = getIntent().getIntExtra(EXTRA_HOUR, calendar.get(Calendar.HOUR_OF_DAY));
-            minute = getIntent().getIntExtra(EXTRA_MINUTE, calendar.get(Calendar.MINUTE));
+        if (getIntent() != null && getIntent().hasExtra(EXTRA_SCHEDULE)) {
+            Schedule schedule;
+            try {
+                schedule = new Schedule(new JSONObject(getIntent().getStringExtra(EXTRA_SCHEDULE)));
+                Calendar dateCalendar = Calendar.getInstance();
+                dateCalendar.setTimeInMillis(schedule.getStartTime());
+                mStartDateData = dateCalendar.getTime();
+                dateCalendar.setTimeInMillis(schedule.getFinishTime());
+                mFinishDateData = dateCalendar.getTime();
+                mNotifyDataIndex = schedule.getNotify();
+                mDescriptionData = schedule.getDescription();
+                mLocationData = schedule.getLocation();
+                mIsWholeDay = schedule.getIsWholeDay();
+                mTitleData = schedule.getTitle();
+                mUpdateId = schedule.getId();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         } else {
-            year = calendar.get(Calendar.YEAR);
-            month = calendar.get(Calendar.MONTH);
-            day = calendar.get(Calendar.DAY_OF_MONTH);
-            hour = calendar.get(Calendar.HOUR_OF_DAY);
-            minute = calendar.get(Calendar.MINUTE);
+            if (getIntent() != null) {
+                year = getIntent().getIntExtra(EXTRA_YEAR, calendar.get(Calendar.YEAR));
+                month = getIntent().getIntExtra(EXTRA_MONTH, calendar.get(Calendar.MONTH));
+                day = getIntent().getIntExtra(EXTRA_DAY, calendar.get(Calendar.DAY_OF_MONTH));
+                hour = getIntent().getIntExtra(EXTRA_HOUR, calendar.get(Calendar.HOUR_OF_DAY));
+                minute = getIntent().getIntExtra(EXTRA_MINUTE, calendar.get(Calendar.MINUTE));
+
+            } else {
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+                hour = calendar.get(Calendar.HOUR_OF_DAY);
+                minute = calendar.get(Calendar.MINUTE);
+            }
+            if (minute / 5 != 0) {
+                // set minutes as the multiple of 5
+                minute = minute + 5 - minute % 5;
+            }
+            mBaseDate = generateDateAndTime(year, month, day, hour, minute);
+            mStartDateData = generateDateAndTime(year, month, day, hour, minute);
+            mFinishDateData = generateDateAndTime(year, month, day, hour, minute);
+            // one hour later
+            mFinishDateData.setTime(mFinishDateData.getTime() + HOUR);
+            mNotifyStringArray = getResources().getStringArray(R.array.schedule_notify_time_list);
         }
-        if (minute / 5 != 0) {
-            // set minutes as the multiple of 5
-            minute = minute + 5 - minute % 5;
-        }
-        mBaseDate = generateDateAndTime(year, month, day, hour, minute);
-        mStartDateData = generateDateAndTime(year, month, day, hour, minute);
-        mFinishDateData = generateDateAndTime(year, month, day, hour, minute);
-        // one hour later
-        mFinishDateData.setTime(mFinishDateData.getTime() + HOUR);
-        mNotifyStringArray = getResources().getStringArray(R.array.schedule_notify_time_list);
         initComponents();
     }
 
@@ -113,6 +143,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
     private void initComponents() {
         initCustomActionBar();
         mTitle = (EditText) findViewById(R.id.title);
+        mTitle.setText(mTitleData);
         mTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -130,11 +161,12 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         });
 
         mLocation = (EditText) findViewById(R.id.location);
+        mLocation.setText(mLocationData);
 
         mWholeDayContainer = (RelativeLayout) findViewById(R.id.whole_day_container);
         mWholeDayContainer.setOnClickListener(this);
         mWholeDaySwitcher = (Switch) findViewById(R.id.whole_day_switcher);
-        mWholeDaySwitcher.setChecked(false);
+        mWholeDaySwitcher.setChecked(mIsWholeDay);
         mWholeDaySwitcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -175,6 +207,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         mMember = (TextView) findViewById(R.id.member);
         mMember.setOnClickListener(this);
         mDescription = (TextView) findViewById(R.id.description);
+        mDescription.setText(mDescriptionData);
         mDescription.setOnClickListener(this);
 
         mSwitcherAnimation = new ValueAnimator();
@@ -229,7 +262,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setCustomView(v, params);
         mOk = (ImageView) v.findViewById(R.id.ok);
         mOk.setOnClickListener(this);
-        mOk.setEnabled(false);
+        mOk.setEnabled(!TextUtils.isEmpty(mTitleData));
         mCancel = (ImageView) v.findViewById(R.id.cancel);
         mCancel.setOnClickListener(this);
     }
@@ -295,11 +328,16 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         cv.put(TableScheduleContent.COLUMN_NOTIFY, mNotifyDataIndex);
         cv.put(TableScheduleContent.COLUMN_MEMBER, "");
         cv.put(TableScheduleContent.COLUMN_DESCRIPTION, mDescriptionData == null ? "" : mDescriptionData);
-        getContentResolver().insert(TableScheduleContent.URI, cv);
+        if (mUpdateId == -1) {
+            getContentResolver().insert(TableScheduleContent.URI, cv);
+        } else {
+            getContentResolver().update(TableScheduleContent.URI, cv, TableScheduleContent.COLUMN_ID + "=" + mUpdateId, null);
+        }
 
         Intent intent = new Intent();
         intent.putExtra(EXTRA_START_TIME, mStartDateData.getTime());
         intent.putExtra(EXTRA_FINISH_TIME, mFinishDateData.getTime());
+        intent.putExtra(EXTRA_ID, mUpdateId);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

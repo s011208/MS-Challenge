@@ -38,6 +38,7 @@
 
     <!-- calendar activity -->
     <string name="calendar_activity_add_schedule_success">Add schedule successfully</string>
+    <string name="calendar_activity_update_schedule_success">Update schedule successfully</string>
 
     <!-- view schedule diloag -->
     <string name="view_schedule_dialog_edit">Edit</string>

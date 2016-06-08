@@ -188,9 +188,11 @@ public class CalendarActivity extends AppCompatActivity
         if (requestCode == REQUEST_ADD_NEW_SCHEDULE) {
             if (resultCode == Activity.RESULT_OK) {
                 mCalendarPager.requestUpdate();
+                boolean addNewData = false;
                 if (data != null) {
                     long scheduleStartTime = data.getLongExtra(AddScheduleActivity.EXTRA_START_TIME, -1);
                     long scheduleFinishTime = data.getLongExtra(AddScheduleActivity.EXTRA_FINISH_TIME, -1);
+                    addNewData = data.getLongExtra(AddScheduleActivity.EXTRA_ID, -1) == -1;
                     boolean isNewScheduleInAgendaView = Utilities.isTimeOverlapping(scheduleStartTime, scheduleFinishTime, mAgendaView.getStartTime(), mAgendaView.getFinishTime());
                     if (DEBUG) {
                         Log.d(TAG, "isNewScheduleInAgendaView: " + isNewScheduleInAgendaView
@@ -203,10 +205,11 @@ public class CalendarActivity extends AppCompatActivity
                 } else {
                     ((AgendaAdapter) mAgendaView.getAdapter()).reloadData();
                 }
+                final int snackBarTextRes = addNewData ? R.string.calendar_activity_add_schedule_success : R.string.calendar_activity_update_schedule_success;
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Snackbar.make(mFab, R.string.calendar_activity_add_schedule_success, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        Snackbar.make(mFab, snackBarTextRes, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     }
                 }, SNAKE_BAR_DELAY_TIME);
             }
@@ -398,11 +401,18 @@ public class CalendarActivity extends AppCompatActivity
         startActivityForResult(startIntent, REQUEST_ADD_NEW_SCHEDULE);
     }
 
+    private void startAddScheduleActivityForResult(Schedule schedule) {
+        Intent startIntent = new Intent(CalendarActivity.this, AddScheduleActivity.class);
+        startIntent.putExtra(AddScheduleActivity.EXTRA_SCHEDULE, schedule.toJson().toString());
+        startActivityForResult(startIntent, REQUEST_ADD_NEW_SCHEDULE);
+    }
+
     @Override
     public void onScheduleDialogPositiveClick(Schedule schedule) {
         if (DEBUG) {
             Log.d(TAG, "onScheduleDialogPositiveClick schedule: " + schedule);
         }
+        startAddScheduleActivityForResult(schedule);
     }
 
     @Override
