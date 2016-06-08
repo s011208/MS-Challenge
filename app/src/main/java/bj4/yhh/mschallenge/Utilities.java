@@ -130,7 +130,7 @@ public class Utilities {
     public static int getDiffMinutes(int h1, int m1, int h2, int m2) {
         int time1 = h1 * 60 + m1;
         int time2 = h2 * 60 + m2;
-        return time1 - time2;
+        return Math.abs(time1 - time2);
     }
 
     /**

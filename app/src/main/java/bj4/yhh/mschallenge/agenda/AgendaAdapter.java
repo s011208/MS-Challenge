@@ -166,10 +166,18 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
             startCalendar.setTimeInMillis(schedule.getStartTime());
             Calendar finishCalendar = Calendar.getInstance();
             finishCalendar.setTimeInMillis(schedule.getFinishTime());
+            Calendar sectionCalendar = Calendar.getInstance();
+            sectionCalendar.setTimeInMillis(item.getSectionDateTime());
             int finishH = finishCalendar.get(Calendar.HOUR_OF_DAY);
             int finishM = finishCalendar.get(Calendar.MINUTE);
             int startH = startCalendar.get(Calendar.HOUR_OF_DAY);
             int startM = startCalendar.get(Calendar.MINUTE);
+            if (startCalendar.get(Calendar.YEAR) != sectionCalendar.get(Calendar.YEAR)
+                    || startCalendar.get(Calendar.MONTH) != sectionCalendar.get(Calendar.MONTH)
+                    || startCalendar.get(Calendar.DAY_OF_MONTH) != sectionCalendar.get(Calendar.DAY_OF_MONTH)) {
+                startH = startM = 0;
+            }
+
             int hours, minutes;
             if (schedule.getFinishTime() >= item.getSectionDateTime() + Utilities.DAY) {
                 int diffMinutes = Utilities.getDiffMinutes(startH, startM, 24, 00);
@@ -187,15 +195,12 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
     }
 
     private View handleViewTypeNoEvent(int position, View convertView) {
-        final NoEvent item = (NoEvent) getItem(position);
         NoEventViewHolder holder;
         if (convertView == null) {
             holder = new NoEventViewHolder();
             convertView = mInflater.inflate(R.layout.agenda_adapter_no_event, null);
             holder.mNoEvent = (TextView) convertView.findViewById(R.id.no_event);
             convertView.setTag(holder);
-        } else {
-            holder = (NoEventViewHolder) convertView.getTag();
         }
         return convertView;
     }
