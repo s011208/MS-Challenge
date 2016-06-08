@@ -52,7 +52,7 @@ public class CalendarActivity extends AppCompatActivity
     private static final boolean IS_SUPPORT_MATERIAL_DESIGN = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     private static final int CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION = 500;
     private static final int REQUEST_ADD_NEW_SCHEDULE = 1000;
-    private static final int SNAKER_BAR_DELAY_TIME = 1000;
+    private static final int SNAKE_BAR_DELAY_TIME = 1000;
 
     private final Calendar mCalendar = Calendar.getInstance();
     private final List<String> mMonthString = Utilities.getMonthString();
@@ -208,7 +208,7 @@ public class CalendarActivity extends AppCompatActivity
                     public void run() {
                         Snackbar.make(mFab, R.string.calendar_activity_add_schedule_success, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     }
-                }, SNAKER_BAR_DELAY_TIME);
+                }, SNAKE_BAR_DELAY_TIME);
             }
         }
     }
