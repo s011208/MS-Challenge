@@ -1,6 +1,8 @@
 package bj4.yhh.mschallenge.agenda;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
@@ -35,6 +37,7 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
     private final Calendar mCalendar = Calendar.getInstance();
     private long mStartDateTime, mFinishDateTime;
     private Callback mCallback;
+    private int mWindowBackgroundColor;
 
     public AgendaAdapter(Context context, long startDateTime, long finishDateTime, long selectedDateTime, Callback cb) {
         mContext = context;
@@ -43,6 +46,7 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
         Utilities.clearCalendarOffset(mCalendar);
         mCallback = cb;
         setDateTimeRange(startDateTime, finishDateTime, selectedDateTime);
+        setWindowBackgroundColor();
     }
 
     /**
@@ -235,6 +239,13 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
             } else if (currentDay + 1 == sectionDay) {
                 display = mContext.getResources().getString(R.string.agenda_view_tomorrow) + " ·" + display;
             }
+            if (currentDay == sectionDay) {
+                holder.mSectionTitle.setTextColor(Color.rgb(0x3f, 0x51, 0xb5));
+                holder.mSectionTitle.setBackgroundColor(Color.rgb(0xe3, 0xf2, 0xfd));
+            } else {
+                holder.mSectionTitle.setTextColor(Color.rgb(0x99, 0x99, 0x99));
+                holder.mSectionTitle.setBackgroundColor(mWindowBackgroundColor);
+            }
         }
         holder.mSectionTitle.setText(display);
         return convertView;
@@ -259,5 +270,17 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
 
     private static class SectionViewHolder {
         TextView mSectionTitle;
+    }
+
+    private void setWindowBackgroundColor() {
+        try {
+            int[] backgroundColorAttr = new int[]{android.R.attr.windowBackground};
+            int indexOfAttrBackgroundColor = 0;
+            TypedArray a = mContext.obtainStyledAttributes(backgroundColorAttr);
+            mWindowBackgroundColor = a.getColor(indexOfAttrBackgroundColor, -1);
+            a.recycle();
+        } catch (Exception e) {
+            mWindowBackgroundColor = Color.WHITE;
+        }
     }
 }
