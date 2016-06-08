@@ -161,7 +161,9 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         });
 
         mLocation = (EditText) findViewById(R.id.location);
-        mLocation.setText(mLocationData);
+        if (mLocationData != null) {
+            mLocation.setText(mLocationData);
+        }
 
         mWholeDayContainer = (RelativeLayout) findViewById(R.id.whole_day_container);
         mWholeDayContainer.setOnClickListener(this);
@@ -207,7 +209,9 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         mMember = (TextView) findViewById(R.id.member);
         mMember.setOnClickListener(this);
         mDescription = (TextView) findViewById(R.id.description);
-        mDescription.setText(mDescriptionData);
+        if (mDescriptionData != null) {
+            mDescription.setText(mDescriptionData);
+        }
         mDescription.setOnClickListener(this);
 
         mSwitcherAnimation = new ValueAnimator();
