@@ -56,13 +56,23 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
     public static final String EXTRA_SCHEDULE = "e_schedule";
     public static final String EXTRA_ID = "e_id";
 
+    private static final String EXTRA_TITLE = "e_title";
+    private static final String EXTRA_IS_WHOLE_DAY = "e_is_whole_day";
+    private static final String EXTRA_LOCATION = "e_location";
+    private static final String EXTRA_NOTIFY = "e_notify";
+    private static final String EXTRA_MEMBER = "e_member";
+    private static final String EXTRA_DESCRIPTION = "e_description";
+
+    public static final String EXTRA_RESULT_REASON = "e_result_reason";
+
     private static final String TAG = "AddScheduleActivity";
     private static final boolean DEBUG = Utilities.DEBUG;
     private static final long HOUR = Utilities.HOUR;
     private static final long DAY = Utilities.DAY;
 
     private EditText mTitle, mLocation;
-    private TextView mStartDate, mFinishDate, mStartTime, mFinishTime, mMember, mDescription, mNotifyResult;
+    private TextView mStartDate, mFinishDate,
+            mStartTime, mFinishTime, mMember, mDescription, mNotifyResult, mDelete;
     private Switch mWholeDaySwitcher;
     private LinearLayout mStartDateContainer, mFinishDateContainer;
     private RelativeLayout mWholeDayContainer, mNotifyContainer;
@@ -87,7 +97,16 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         int year, month, day, hour, minute;
-        if (getIntent() != null && getIntent().hasExtra(EXTRA_SCHEDULE)) {
+        if (savedInstanceState != null) {
+            mUpdateId = savedInstanceState.getLong(EXTRA_ID);
+            mTitleData = savedInstanceState.getString(EXTRA_TITLE);
+            mIsWholeDay = savedInstanceState.getBoolean(EXTRA_IS_WHOLE_DAY);
+            mStartDateData = new Date(savedInstanceState.getLong(EXTRA_START_TIME));
+            mFinishDateData = new Date(savedInstanceState.getLong(EXTRA_FINISH_TIME));
+            mLocationData = savedInstanceState.getString(EXTRA_LOCATION);
+            mNotifyDataIndex = savedInstanceState.getInt(EXTRA_NOTIFY);
+            mDescriptionData = savedInstanceState.getString(EXTRA_DESCRIPTION);
+        } else if (getIntent() != null && getIntent().hasExtra(EXTRA_SCHEDULE)) {
             Schedule schedule;
             try {
                 schedule = new Schedule(new JSONObject(getIntent().getStringExtra(EXTRA_SCHEDULE)));
@@ -129,9 +148,23 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
             mFinishDateData = generateDateAndTime(year, month, day, hour, minute);
             // one hour later
             mFinishDateData.setTime(mFinishDateData.getTime() + HOUR);
-            mNotifyStringArray = getResources().getStringArray(R.array.schedule_notify_time_list);
         }
+        mNotifyStringArray = getResources().getStringArray(R.array.schedule_notify_time_list);
         initComponents();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(EXTRA_ID, mUpdateId);
+        outState.putString(EXTRA_TITLE, mTitle.getText().toString());
+        outState.putBoolean(EXTRA_IS_WHOLE_DAY, mWholeDaySwitcher.isChecked());
+        outState.putLong(EXTRA_START_TIME, mStartDateData.getTime());
+        outState.putLong(EXTRA_FINISH_TIME, mFinishDateData.getTime());
+        outState.putString(EXTRA_LOCATION, mLocation.getText().toString());
+        outState.putInt(EXTRA_NOTIFY, mNotifyDataIndex);
+        outState.putString(EXTRA_MEMBER, "");
+        outState.putString(EXTRA_DESCRIPTION, mDescriptionData);
     }
 
     private Date generateDateAndTime(int y, int m, int d, int h, int min) {
@@ -251,6 +284,37 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
+
+        mDelete = (TextView) findViewById(R.id.delete_schedule);
+        if (mUpdateId != -1) {
+            findViewById(R.id.delete_schedule_sep).setVisibility(View.VISIBLE);
+            mDelete.setVisibility(View.VISIBLE);
+            mDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(AddScheduleActivity.this)
+                            .setMessage(R.string.schedule_remove_confirm_dialog_message)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    getContentResolver().delete(TableScheduleContent.URI, TableScheduleContent.COLUMN_ID + "=" + mUpdateId, null);
+                                    Intent intent = new Intent();
+                                    intent.putExtra(EXTRA_START_TIME, mStartDateData.getTime());
+                                    intent.putExtra(EXTRA_FINISH_TIME, mFinishDateData.getTime());
+                                    intent.putExtra(EXTRA_RESULT_REASON, R.string.calendar_activity_remove_schedule_success);
+                                    setResult(Activity.RESULT_OK, intent);
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            }).create().show();
+                }
+            });
+        }
     }
 
     private void initCustomActionBar() {
@@ -332,9 +396,12 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         cv.put(TableScheduleContent.COLUMN_NOTIFY, mNotifyDataIndex);
         cv.put(TableScheduleContent.COLUMN_MEMBER, "");
         cv.put(TableScheduleContent.COLUMN_DESCRIPTION, mDescriptionData == null ? "" : mDescriptionData);
+        int okReason;
         if (mUpdateId == -1) {
+            okReason = R.string.calendar_activity_add_schedule_success;
             getContentResolver().insert(TableScheduleContent.URI, cv);
         } else {
+            okReason = R.string.calendar_activity_update_schedule_success;
             getContentResolver().update(TableScheduleContent.URI, cv, TableScheduleContent.COLUMN_ID + "=" + mUpdateId, null);
         }
 
@@ -342,6 +409,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         intent.putExtra(EXTRA_START_TIME, mStartDateData.getTime());
         intent.putExtra(EXTRA_FINISH_TIME, mFinishDateData.getTime());
         intent.putExtra(EXTRA_ID, mUpdateId);
+        intent.putExtra(EXTRA_RESULT_REASON, okReason);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

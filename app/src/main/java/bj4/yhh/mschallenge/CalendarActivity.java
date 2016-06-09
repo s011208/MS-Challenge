@@ -219,30 +219,39 @@ public class CalendarActivity extends AppCompatActivity
         if (requestCode == REQUEST_ADD_NEW_SCHEDULE) {
             if (resultCode == Activity.RESULT_OK) {
                 mCalendarPager.requestUpdate();
-                boolean addNewData = false;
                 if (data != null) {
-                    long scheduleStartTime = data.getLongExtra(AddScheduleActivity.EXTRA_START_TIME, -1);
-                    long scheduleFinishTime = data.getLongExtra(AddScheduleActivity.EXTRA_FINISH_TIME, -1);
-                    addNewData = data.getLongExtra(AddScheduleActivity.EXTRA_ID, -1) == -1;
-                    boolean isNewScheduleInAgendaView = Utilities.isTimeOverlapping(scheduleStartTime, scheduleFinishTime, mAgendaView.getStartTime(), mAgendaView.getFinishTime());
-                    if (DEBUG) {
-                        Log.d(TAG, "isNewScheduleInAgendaView: " + isNewScheduleInAgendaView
-                                + ", scheduleStartTime:" + scheduleStartTime + ", scheduleFinishTime:" + scheduleFinishTime
-                                + "\nmAgendaView.getStartTime(): " + mAgendaView.getStartTime() + ", mAgendaView.getFinishTime(): " + mAgendaView.getFinishTime());
+                    final int resultReason = data.getIntExtra(AddScheduleActivity.EXTRA_RESULT_REASON, -1);
+                    if (resultReason != R.string.calendar_activity_remove_schedule_success) {
+                        long scheduleStartTime = data.getLongExtra(AddScheduleActivity.EXTRA_START_TIME, -1);
+                        long scheduleFinishTime = data.getLongExtra(AddScheduleActivity.EXTRA_FINISH_TIME, -1);
+                        boolean isNewScheduleInAgendaView = Utilities.isTimeOverlapping(scheduleStartTime, scheduleFinishTime, mAgendaView.getStartTime(), mAgendaView.getFinishTime());
+                        if (DEBUG) {
+                            Log.d(TAG, "isNewScheduleInAgendaView: " + isNewScheduleInAgendaView
+                                    + ", scheduleStartTime:" + scheduleStartTime + ", scheduleFinishTime:" + scheduleFinishTime
+                                    + "\nmAgendaView.getStartTime(): " + mAgendaView.getStartTime() + ", mAgendaView.getFinishTime(): " + mAgendaView.getFinishTime());
+                        }
+                        if (isNewScheduleInAgendaView) {
+                            ((AgendaAdapter) mAgendaView.getAdapter()).reloadData();
+                        }
+                    } else {
+                        long scheduleStartTime = data.getLongExtra(AddScheduleActivity.EXTRA_START_TIME, -1);
+                        long scheduleFinishTime = data.getLongExtra(AddScheduleActivity.EXTRA_FINISH_TIME, -1);
+                        boolean isRemovedScheduleInAgendaView = Utilities.isTimeOverlapping(scheduleStartTime, scheduleFinishTime, mAgendaView.getStartTime(), mAgendaView.getFinishTime());
+                        if (isRemovedScheduleInAgendaView) {
+                            ((AgendaAdapter) mAgendaView.getAdapter()).reloadData();
+                        }
                     }
-                    if (isNewScheduleInAgendaView) {
-                        ((AgendaAdapter) mAgendaView.getAdapter()).reloadData();
+                    if (resultReason != -1) {
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Snackbar.make(mFab, resultReason, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                            }
+                        }, SNAKE_BAR_DELAY_TIME);
                     }
                 } else {
                     ((AgendaAdapter) mAgendaView.getAdapter()).reloadData();
                 }
-                final int snackBarTextRes = addNewData ? R.string.calendar_activity_add_schedule_success : R.string.calendar_activity_update_schedule_success;
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Snackbar.make(mFab, snackBarTextRes, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    }
-                }, SNAKE_BAR_DELAY_TIME);
             }
         }
     }

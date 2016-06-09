@@ -271,6 +271,27 @@
                 android:text="@string/schedule_description"
                 android:textColor="@color/primary_text_color_schedule"
                 android:textSize="@dimen/schedule_primary_text_size" />
+
+            <View
+                android:id="@+id/delete_schedule_sep"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/schedule_text_padding_without_icon"
+                android:background="@color/separator_color_schedule"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/delete_schedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:minHeight="?android:attr/listPreferredItemHeight"
+                android:padding="@dimen/schedule_item_padding"
+                android:text="@string/schedule_remove_item"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="@dimen/schedule_primary_text_size"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
