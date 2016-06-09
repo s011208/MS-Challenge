@@ -19,7 +19,7 @@ public class MethodTest extends AndroidTestCase {
         rtn = Utilities.getAllDateAtYearAndMonth(2016, Calendar.JANUARY);
         assertEquals(42, rtn.size());
         rtn = Utilities.getAllDateAtYearAndMonth(2026, Calendar.FEBRUARY);
-        assertEquals(35, rtn.size());
+        assertEquals(42, rtn.size());
     }
 
     public void testGetAllDateAtYearAndMonthRandomly() {
@@ -27,7 +27,7 @@ public class MethodTest extends AndroidTestCase {
             int year = (int) (Math.random() * 10000);
             int month = (int) ((Math.random() * 10000) % 12);
             List rtn = Utilities.getAllDateAtYearAndMonth(year, month);
-            assertEquals(0, rtn.size() % Calendar.DAY_OF_WEEK);
+            assertEquals(42, rtn.size());
         }
     }
 

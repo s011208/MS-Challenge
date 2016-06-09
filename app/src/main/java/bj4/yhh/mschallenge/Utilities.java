@@ -26,6 +26,8 @@ public class Utilities {
     private static final String TAG = "Utilities";
     public static final boolean DEBUG = true;
 
+    public static final int SIZE_OF_DATE = 42;
+
     public static final long SECOND = 1000;
     public static final long MINUTE = 60 * SECOND;
     public static final long HOUR = 60 * MINUTE;
@@ -98,22 +100,16 @@ public class Utilities {
         if (fillUpSpace) {
             // filling up following
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            final int dayOfWeekOfLastDay = calendar.get(Calendar.DAY_OF_WEEK);
             int nextYear = y;
             int nextMonth = m + 1;
             if (nextMonth > Calendar.DECEMBER) {
                 nextMonth = Calendar.JANUARY;
                 ++nextYear;
             }
+            // we keep all data size to SIZE_OF_DATE
             List<Date> nextDates = getAllDateAtYearAndMonth(nextYear, nextMonth, false);
-            final int startIndex = 0;
-            final int endIndex = (Calendar.DAY_OF_WEEK - dayOfWeekOfLastDay) + Calendar.DAY_OF_WEEK;
-            rtn.addAll(nextDates.subList(startIndex, endIndex));
-        }
-        if (rtn.size() > 42 /*constrain in 6 line*/) {
-            for (int i = 42; i < rtn.size(); ++i) {
-                rtn.remove(i);
-                --i;
+            for (int i = 0; i < nextDates.size() && rtn.size() < SIZE_OF_DATE; ++i) {
+                rtn.add(nextDates.get(i));
             }
         }
         return rtn;
