@@ -60,6 +60,8 @@ public class CalendarActivity extends AppCompatActivity
     private static final int REQUEST_ADD_NEW_SCHEDULE = 1000;
     private static final int SNAKE_BAR_DELAY_TIME = 1000;
 
+    private static final String EXTRA_MEMU_BUTTON_TEXT = "e_menu_button_text";
+
     private static final int REQUEST_PERMISSION_LOCATION = 1000;
 
     private final Calendar mCalendar = Calendar.getInstance();
@@ -76,12 +78,19 @@ public class CalendarActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG, "onCreate activity id: " + CalendarActivity.this + ", mMonthString size: " + mMonthString.size());
         setContentView(R.layout.activity_calendar);
         mCalendar.setTimeInMillis(System.currentTimeMillis());
         Utilities.clearCalendarOffset(mCalendar);
         mSelectedDateTime = mCalendar.getTime();
-        initComponents();
+        initComponents(savedInstanceState);
         requestPermissions();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(EXTRA_MEMU_BUTTON_TEXT, mMenuMonthText.getText().toString());
     }
 
     @Override
@@ -106,7 +115,7 @@ public class CalendarActivity extends AppCompatActivity
         }
     }
 
-    private void initComponents() {
+    private void initComponents(Bundle savedInstanceState) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -129,7 +138,7 @@ public class CalendarActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        initCustomActionBar();
+        initCustomActionBar(savedInstanceState);
         mCalendarPager = (CalendarPager) findViewById(R.id.calendar_pager);
         mCalendarPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -139,12 +148,14 @@ public class CalendarActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 int[] value = mCalendarPager.getCurrentMonthAndYear();
-                String text = mMonthString.get(value[1]);
-                if (value[0] != mCalendar.get(Calendar.YEAR)) {
-                    text += " " + value[0];
+                if (value != null) {
+                    String text = mMonthString.get(value[1]);
+                    if (value[0] != mCalendar.get(Calendar.YEAR)) {
+                        text += " " + value[0];
+                    }
+                    mMenuMonthText.setText(text);
+                    mCalendarPager.setSelectedDate(mSelectedDateTime, position);
                 }
-                mMenuMonthText.setText(text);
-                mCalendarPager.setSelectedDate(mSelectedDateTime, position);
             }
 
             @Override
@@ -189,7 +200,7 @@ public class CalendarActivity extends AppCompatActivity
         });
     }
 
-    private void initCustomActionBar() {
+    private void initCustomActionBar(Bundle savedInstanceState) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             toolbar.setContentInsetsAbsolute(0, 0);
@@ -201,7 +212,7 @@ public class CalendarActivity extends AppCompatActivity
                 ActionBar.LayoutParams.WRAP_CONTENT,
                 ActionBar.LayoutParams.MATCH_PARENT);
         mMenuMonthText = (TextView) ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.menu_month_layout, null);
-        mMenuMonthText.setText(mMonthString.get(mCalendar.get(Calendar.MONTH)));
+        mMenuMonthText.setText(savedInstanceState == null ? mMonthString.get(mCalendar.get(Calendar.MONTH)) : savedInstanceState.getString(EXTRA_MEMU_BUTTON_TEXT, mMonthString.get(mCalendar.get(Calendar.MONTH))));
         getSupportActionBar().setCustomView(mMenuMonthText, params);
         mMenuMonthText.setOnClickListener(new View.OnClickListener() {
             @Override
