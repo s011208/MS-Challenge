@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -19,7 +20,10 @@ import java.util.Calendar;
 import bj4.yhh.mschallenge.R;
 import bj4.yhh.mschallenge.Utilities;
 import bj4.yhh.mschallenge.provider.Schedule;
+import bj4.yhh.mschallenge.provider.TableWeather;
 import bj4.yhh.mschallenge.views.PinnedSectionListView;
+import bj4.yhh.mschallenge.weather.RetrieveWeatherDataHelper;
+import bj4.yhh.mschallenge.weather.WeatherConfig;
 
 /**
  * Created by yenhsunhuang on 2016/6/6.
@@ -34,7 +38,8 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
     private final Context mContext;
     private final LayoutInflater mInflater;
     private final ArrayList<AgendaItem> mItems = new ArrayList<>();
-    private final Calendar mCalendar = Calendar.getInstance();
+    private final Calendar mClearOffsetCalendar = Calendar.getInstance(),
+            mOriginCalendar = Calendar.getInstance(), mReusableCalendar = Calendar.getInstance();
     private long mStartDateTime, mFinishDateTime;
     private Callback mCallback;
     private int mWindowBackgroundColor;
@@ -42,8 +47,8 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
     public AgendaAdapter(Context context, long startDateTime, long finishDateTime, long selectedDateTime, Callback cb) {
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mCalendar.setTimeInMillis(System.currentTimeMillis());
-        Utilities.clearCalendarOffset(mCalendar);
+        mClearOffsetCalendar.setTimeInMillis(System.currentTimeMillis());
+        Utilities.clearCalendarOffset(mClearOffsetCalendar);
         mCallback = cb;
         setDateTimeRange(startDateTime, finishDateTime, selectedDateTime);
         setWindowBackgroundColor();
@@ -120,6 +125,9 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
             case ITEM_VIEW_TYPE_NO_EVENT:
                 convertView = handleViewTypeNoEvent(position, convertView);
                 break;
+            case ITEM_VIEW_TYPE_WEATHER:
+                convertView = handlerViewTypeWeather(position, convertView);
+                break;
         }
         return convertView;
     }
@@ -136,6 +144,66 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
     @Override
     public int getViewTypeCount() {
         return 4;
+    }
+
+    private View handlerViewTypeWeather(int position, View convertView) {
+        Weather weather = (Weather) getItem(position);
+        WeatherViewHolder holder;
+        if (convertView == null) {
+            holder = new WeatherViewHolder();
+            convertView = mInflater.inflate(R.layout.agenda_adapter_weather, null);
+            holder.mWeather = (TextView) convertView.findViewById(R.id.weather);
+            holder.mWeatherTime = (TextView) convertView.findViewById(R.id.weather_time);
+            holder.mWeatherContainer = (RelativeLayout) convertView.findViewById(R.id.weather_container);
+            convertView.setTag(holder);
+        } else {
+            holder = (WeatherViewHolder) convertView.getTag();
+        }
+        final int currentHour = mOriginCalendar.get(Calendar.HOUR_OF_DAY);
+        mReusableCalendar.setTimeInMillis(weather.getDateTime());
+        final int focusBackgroundColor = Color.rgb(255, 235, 238);
+        final boolean isToday = mReusableCalendar.get(Calendar.YEAR) == mOriginCalendar.get(Calendar.YEAR) &&
+                mReusableCalendar.get(Calendar.MONTH) == mOriginCalendar.get(Calendar.MONTH) &&
+                mReusableCalendar.get(Calendar.DAY_OF_MONTH) == mOriginCalendar.get(Calendar.DAY_OF_MONTH);
+        switch (weather.getWeatherTime()) {
+            case TableWeather.WEATHER_TIME_MORNING:
+                holder.mWeatherTime.setText(R.string.agenda_view_morning);
+                if (isToday && currentHour <= 12 && currentHour >= 0) {
+                    holder.mWeatherContainer.setBackgroundColor(focusBackgroundColor);
+                } else {
+                    holder.mWeatherContainer.setBackgroundColor(mWindowBackgroundColor);
+                }
+                break;
+            case TableWeather.WEATHER_TIME_AFTERNOON:
+                holder.mWeatherTime.setText(R.string.agenda_view_afternoon);
+                if (isToday && currentHour <= 18 && currentHour > 12) {
+                    holder.mWeatherContainer.setBackgroundColor(focusBackgroundColor);
+                } else {
+                    holder.mWeatherContainer.setBackgroundColor(mWindowBackgroundColor);
+                }
+                break;
+            case TableWeather.WEATHER_TIME_NIGHT:
+                if (isToday && currentHour <= 24 && currentHour > 18) {
+                    holder.mWeatherContainer.setBackgroundColor(focusBackgroundColor);
+                } else {
+                    holder.mWeatherContainer.setBackgroundColor(mWindowBackgroundColor);
+                }
+                holder.mWeatherTime.setText(R.string.agenda_view_night);
+                break;
+        }
+        holder.mWeather.setTag(position);
+        if (TextUtils.isEmpty(weather.getIconString())) {
+            // load from helper
+            holder.mWeather.setCompoundDrawables(null, null, null, null);
+            holder.mWeather.setText("");
+            holder.mWeather.setContentDescription("");
+            new RetrieveWeatherDataHelper(mContext, weather, holder.mWeather, position).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        } else {
+            holder.mWeather.setCompoundDrawablesWithIntrinsicBounds(WeatherConfig.getIconResource(weather.getIconString()), 0, 0, 0);
+            holder.mWeather.setText(weather.getTemperature() + "°");
+            holder.mWeather.setContentDescription(weather.getSummary());
+        }
+        return convertView;
     }
 
     private View handleViewTypeEvent(int position, View convertView) {
@@ -223,14 +291,14 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
         String display;
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(item.getDateTime());
-        if (mCalendar.get(Calendar.YEAR) != calendar.get(Calendar.YEAR)) {
+        if (mClearOffsetCalendar.get(Calendar.YEAR) != calendar.get(Calendar.YEAR)) {
             display = new SimpleDateFormat("EEEE, MMMM dd, yyyy").format(item.getDateTime());
         } else {
             display = new SimpleDateFormat("EEEE, MMMM dd").format(item.getDateTime());
         }
-        if (calendar.get(Calendar.MONTH) == mCalendar.get(Calendar.MONTH)
-                && calendar.get(Calendar.YEAR) == mCalendar.get(Calendar.YEAR)) {
-            int currentDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+        if (calendar.get(Calendar.MONTH) == mClearOffsetCalendar.get(Calendar.MONTH)
+                && calendar.get(Calendar.YEAR) == mClearOffsetCalendar.get(Calendar.YEAR)) {
+            int currentDay = mClearOffsetCalendar.get(Calendar.DAY_OF_MONTH);
             int sectionDay = calendar.get(Calendar.DAY_OF_MONTH);
             if (currentDay - 1 == sectionDay) {
                 display = mContext.getResources().getString(R.string.agenda_view_yesterday) + " ·" + display;
@@ -270,6 +338,11 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
 
     private static class SectionViewHolder {
         TextView mSectionTitle;
+    }
+
+    private static class WeatherViewHolder {
+        TextView mWeatherTime, mWeather;
+        RelativeLayout mWeatherContainer;
     }
 
     private void setWindowBackgroundColor() {

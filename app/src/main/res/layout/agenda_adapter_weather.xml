@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/weather_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/agenda_view_item_padding">
+
+    <TextView
+        android:id="@+id/weather"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:drawablePadding="@dimen/agenda_view_weather_text_drawable_padding"
+        android:gravity="center_vertical"
+        android:minEms="3"
+        android:textColor="#333"
+        android:textSize="@dimen/agenda_view_weather_text_size" />
+
+    <TextView
+        android:id="@+id/weather_time"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/weather"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/holo_red_light"
+        android:textStyle="bold" />
+</RelativeLayout>

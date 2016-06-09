@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class ProviderDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "provider_database.db";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     public ProviderDatabase(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
@@ -18,11 +18,15 @@ public class ProviderDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         createTableScheduleContent(db);
+        createTableWeather(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if (oldVersion == 1) {
+            createTableWeather(db);
+            ++oldVersion;
+        }
     }
 
     private static void createTableScheduleContent(SQLiteDatabase db) {
@@ -37,5 +41,16 @@ public class ProviderDatabase extends SQLiteOpenHelper {
                 + TableScheduleContent.COLUMN_START_TIME + " INTEGER NOT NULL, "
                 + TableScheduleContent.COLUMN_FINISH_TIME + " INTEGER NOT NULL, "
                 + TableScheduleContent.COLUMN_TITLE + " TEXT NOT NULL)");
+    }
+
+    private static void createTableWeather(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS "
+                + TableWeather.TABLE_NAME + " ( "
+                + TableWeather.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + TableWeather.COLUMN_DATE_TIME + " INTEGER NOT NULL,"
+                + TableWeather.COLUMN_ICON + " TEXT NOT NULL,"
+                + TableWeather.COLUMN_SUMMARY + " TEXT NOT NULL,"
+                + TableWeather.COLUMN_TEMPERATURE + " INTEGER NOT NULL,"
+                + TableWeather.COLUMN_WEATHER_TIME + " INTEGER NOT NULL)");
     }
 }

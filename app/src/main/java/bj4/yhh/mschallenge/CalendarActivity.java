@@ -1,17 +1,23 @@
 package bj4.yhh.mschallenge;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Animatable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -54,6 +60,8 @@ public class CalendarActivity extends AppCompatActivity
     private static final int REQUEST_ADD_NEW_SCHEDULE = 1000;
     private static final int SNAKE_BAR_DELAY_TIME = 1000;
 
+    private static final int REQUEST_PERMISSION_LOCATION = 1000;
+
     private final Calendar mCalendar = Calendar.getInstance();
     private final List<String> mMonthString = Utilities.getMonthString();
     private TextView mMenuMonthText;
@@ -73,6 +81,29 @@ public class CalendarActivity extends AppCompatActivity
         Utilities.clearCalendarOffset(mCalendar);
         mSelectedDateTime = mCalendar.getTime();
         initComponents();
+        requestPermissions();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSION_LOCATION) {
+            // we do not care about location result currently
+        }
+    }
+
+    private void requestPermissions() {
+        if (ContextCompat.checkSelfPermission(CalendarActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(CalendarActivity.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new AlertDialog.Builder(CalendarActivity.this)
+                        .setTitle(R.string.permission_dialog_location_title).setMessage(R.string.permission_dialog_location_title).create().show();
+            } else {
+                ActivityCompat.requestPermissions(CalendarActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_PERMISSION_LOCATION);
+            }
+        }
     }
 
     private void initComponents() {

@@ -5,11 +5,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import bj4.yhh.mschallenge.Utilities;
 import bj4.yhh.mschallenge.provider.Schedule;
+import bj4.yhh.mschallenge.provider.TableWeather;
 
 /**
  * Created by yenhsunhuang on 2016/6/6.
@@ -48,6 +48,9 @@ public class RetrieveAgendaDataHelper extends AsyncTask<Void, Void, ArrayList<Ag
             final long dateTime = mStartDateTime + Utilities.DAY * i;
             final long finishDateTime = dateTime + Utilities.DAY - Utilities.SECOND;
             rtn.add(new Section(dateTime));
+            rtn.add(new Weather(TableWeather.WEATHER_TIME_MORNING, dateTime));
+            rtn.add(new Weather(TableWeather.WEATHER_TIME_AFTERNOON, dateTime));
+            rtn.add(new Weather(TableWeather.WEATHER_TIME_NIGHT, dateTime));
             boolean addEvent = false;
             for (Schedule schedule : schedules) {
                 if (Utilities.isTimeOverlapping(schedule.getStartTime(), schedule.getFinishTime()

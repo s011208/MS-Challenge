@@ -35,12 +35,19 @@
     <string name="agenda_view_today">Today</string>
     <string name="agenda_view_tomorrow">Tomorrow</string>
     <string name="agenda_view_no_event">No event</string>
+    <string name="agenda_view_morning">Morning</string>
+    <string name="agenda_view_afternoon">Afternoon</string>
+    <string name="agenda_view_night">Night</string>
 
     <!-- calendar activity -->
     <string name="calendar_activity_add_schedule_success">Add schedule successfully</string>
     <string name="calendar_activity_update_schedule_success">Update schedule successfully</string>
 
-    <!-- view schedule diloag -->
+    <!-- view schedule dialog -->
     <string name="view_schedule_dialog_edit">Edit</string>
     <string name="view_schedule_dialog_read_more">... read more</string>
+
+    <!-- permission dialog -->
+    <string name="permission_dialog_location_title">Enable location</string>
+    <string name="permission_dialog_location_message">Enable location for more fabulous functions for you!</string>
 </resources>

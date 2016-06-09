@@ -2,7 +2,12 @@ package bj4.yhh.mschallenge;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,6 +23,7 @@ import bj4.yhh.mschallenge.provider.TableScheduleContent;
  * Created by User on 2016/6/2.
  */
 public class Utilities {
+    private static final String TAG = "Utilities";
     public static final boolean DEBUG = true;
 
     public static final long SECOND = 1000;
@@ -147,5 +153,29 @@ public class Utilities {
 
     public static String debugDateTime(long time) {
         return new SimpleDateFormat("yyyy MM dd").format(time);
+    }
+
+    public static String getJSONFromUrl(String address) {
+        try {
+            URL url = new URL(address);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line).append("\n");
+                }
+                bufferedReader.close();
+                return stringBuilder.toString();
+            } finally {
+                urlConnection.disconnect();
+            }
+        } catch (Exception e) {
+            if (DEBUG) {
+                Log.w(TAG, e.getMessage(), e);
+            }
+            return null;
+        }
     }
 }

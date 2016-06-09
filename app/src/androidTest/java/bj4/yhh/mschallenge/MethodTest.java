@@ -17,7 +17,7 @@ public class MethodTest extends AndroidTestCase {
         List rtn = Utilities.getAllDateAtYearAndMonth(2016, Calendar.JUNE);
         assertEquals(42, rtn.size());
         rtn = Utilities.getAllDateAtYearAndMonth(2016, Calendar.JANUARY);
-        assertEquals(49, rtn.size());
+        assertEquals(42, rtn.size());
         rtn = Utilities.getAllDateAtYearAndMonth(2026, Calendar.FEBRUARY);
         assertEquals(35, rtn.size());
     }
