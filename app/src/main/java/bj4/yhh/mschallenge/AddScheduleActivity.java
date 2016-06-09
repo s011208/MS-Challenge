@@ -8,8 +8,11 @@ import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +22,14 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,8 +41,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import bj4.yhh.mschallenge.dialogs.ScheduleDescriptionDialog;
 import bj4.yhh.mschallenge.provider.Schedule;
@@ -70,7 +82,8 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
     private static final long HOUR = Utilities.HOUR;
     private static final long DAY = Utilities.DAY;
 
-    private EditText mTitle, mLocation;
+    private AutoCompleteTextView mTitle;
+    private EditText mLocation;
     private TextView mStartDate, mFinishDate,
             mStartTime, mFinishTime, mMember, mDescription, mNotifyResult, mDelete;
     private Switch mWholeDaySwitcher;
@@ -81,7 +94,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
 
     private ImageView mOk, mCancel;
 
-    private Date mBaseDate, mStartDateData, mFinishDateData;
+    private Date mStartDateData, mFinishDateData;
 
     private String[] mNotifyStringArray;
     private int mNotifyDataIndex = TableScheduleContent.SCHEDULE_NOTIFY_NONE;
@@ -143,7 +156,6 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
                 // set minutes as the multiple of 5
                 minute = minute + 5 - minute % 5;
             }
-            mBaseDate = generateDateAndTime(year, month, day, hour, minute);
             mStartDateData = generateDateAndTime(year, month, day, hour, minute);
             mFinishDateData = generateDateAndTime(year, month, day, hour, minute);
             // one hour later
@@ -151,6 +163,11 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         }
         mNotifyStringArray = getResources().getStringArray(R.array.schedule_notify_time_list);
         initComponents();
+
+        // hide ime when activity showing
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
     }
 
     @Override
@@ -175,7 +192,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
 
     private void initComponents() {
         initCustomActionBar();
-        mTitle = (EditText) findViewById(R.id.title);
+        mTitle = (AutoCompleteTextView) findViewById(R.id.title);
         mTitle.setText(mTitleData);
         mTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -192,6 +209,29 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
             public void afterTextChanged(Editable s) {
             }
         });
+        new AsyncTask<Void, Void, TitleArrayAdapter>() {
+            @Override
+            protected TitleArrayAdapter doInBackground(Void... params) {
+                Set<String> dataSet = new HashSet<>();
+                Cursor c = getContentResolver().query(TableScheduleContent.URI, new String[]{TableScheduleContent.COLUMN_TITLE},
+                        null, null, null);
+                if (c != null) {
+                    try {
+                        while (c.moveToNext()) {
+                            dataSet.add(c.getString(0));
+                        }
+                    } finally {
+                        c.close();
+                    }
+                }
+                return new TitleArrayAdapter(AddScheduleActivity.this, android.R.layout.simple_list_item_1, new ArrayList(dataSet));
+            }
+
+            @Override
+            protected void onPostExecute(TitleArrayAdapter adapter) {
+                mTitle.setAdapter(adapter);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         mLocation = (EditText) findViewById(R.id.location);
         if (mLocationData != null) {
@@ -544,4 +584,44 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
             mDescription.setText(description);
         }
     }
+
+    private static class TitleArrayAdapter extends ArrayAdapter<String> {
+        private final List<String> mAllData = new ArrayList<>();
+
+        public TitleArrayAdapter(Context context, int resource, List<String> objects) {
+            super(context, resource, objects);
+            mAllData.addAll(objects);
+        }
+
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    FilterResults results = new FilterResults();
+                    List<String> data = new ArrayList<>();
+                    for (String str : mAllData) {
+                        if (str.contains(constraint)) {
+                            data.add(str);
+                        }
+                    }
+                    results.count = data.size();
+                    results.values = data;
+                    return results;
+                }
+
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+                    if (results != null && results.count > 0) {
+                        clear();
+                        addAll((List<String>) results.values);
+                        notifyDataSetChanged();
+                    } else {
+                        notifyDataSetInvalidated();
+                    }
+                }
+            };
+        }
+    }
+
 }

@@ -21,11 +21,12 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:completionThreshold="1"
                 android:drawableLeft="@drawable/add_schedule_title_drawable"
                 android:drawablePadding="@dimen/schedule_drawable_padding"
                 android:hint="@string/schedule_activity_hint_title"
