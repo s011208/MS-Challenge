@@ -60,7 +60,8 @@ public class CalendarActivity extends AppCompatActivity
     private static final int REQUEST_ADD_NEW_SCHEDULE = 1000;
     private static final int SNAKE_BAR_DELAY_TIME = 1000;
 
-    private static final String EXTRA_MEMU_BUTTON_TEXT = "e_menu_button_text";
+    private static final String EXTRA_MENU_BUTTON_TEXT = "e_menu_button_text";
+    private static final String EXTRA_IS_SHOW_CALENDAR = "e_is_show_calendar";
 
     private static final int REQUEST_PERMISSION_LOCATION = 1000;
 
@@ -83,6 +84,7 @@ public class CalendarActivity extends AppCompatActivity
         mCalendar.setTimeInMillis(System.currentTimeMillis());
         Utilities.clearCalendarOffset(mCalendar);
         mSelectedDateTime = mCalendar.getTime();
+        mIsShowCalendar = savedInstanceState == null ? false : savedInstanceState.getBoolean(EXTRA_IS_SHOW_CALENDAR, false);
         initComponents(savedInstanceState);
         requestPermissions();
     }
@@ -90,7 +92,8 @@ public class CalendarActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(EXTRA_MEMU_BUTTON_TEXT, mMenuMonthText.getText().toString());
+        outState.putString(EXTRA_MENU_BUTTON_TEXT, mMenuMonthText.getText().toString());
+        outState.putBoolean(EXTRA_IS_SHOW_CALENDAR, mIsShowCalendar);
     }
 
     @Override
@@ -198,6 +201,7 @@ public class CalendarActivity extends AppCompatActivity
                 }
             }
         });
+        switchCalendarVisibility(false);
     }
 
     private void initCustomActionBar(Bundle savedInstanceState) {
@@ -212,14 +216,14 @@ public class CalendarActivity extends AppCompatActivity
                 ActionBar.LayoutParams.WRAP_CONTENT,
                 ActionBar.LayoutParams.MATCH_PARENT);
         mMenuMonthText = (TextView) ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.menu_month_layout, null);
-        mMenuMonthText.setText(savedInstanceState == null ? mMonthString.get(mCalendar.get(Calendar.MONTH)) : savedInstanceState.getString(EXTRA_MEMU_BUTTON_TEXT, mMonthString.get(mCalendar.get(Calendar.MONTH))));
+        mMenuMonthText.setText(savedInstanceState == null ? mMonthString.get(mCalendar.get(Calendar.MONTH)) : savedInstanceState.getString(EXTRA_MENU_BUTTON_TEXT, mMonthString.get(mCalendar.get(Calendar.MONTH))));
         getSupportActionBar().setCustomView(mMenuMonthText, params);
         mMenuMonthText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mIsShowCalendar = !mIsShowCalendar;
                 updateMenuChevronIcon(true);
-                switchCalendarVisibility();
+                switchCalendarVisibility(true);
             }
         });
         updateMenuChevronIcon(false);
@@ -295,83 +299,95 @@ public class CalendarActivity extends AppCompatActivity
         }
     }
 
-    private void switchCalendarVisibility() {
-        if (mMenuButtonAnimator != null && mMenuButtonAnimator.isRunning()) {
-            mMenuButtonAnimator.cancel();
-        }
-        if (mIsShowCalendar) {
-            mMenuButtonAnimator = new ValueAnimator().ofFloat(1f, 0f);
-            mMenuButtonAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    Float value = (Float) animation.getAnimatedValue();
-                    mCalendarPager.setTranslationY(-mCalendarPager.getHeight() * value);
-                }
-            });
-            mMenuButtonAnimator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    if (mCalendarPager.getVisibility() != View.VISIBLE) {
-                        mCalendarPager.setVisibility(View.VISIBLE);
+    private void switchCalendarVisibility(boolean animate) {
+        if (animate) {
+            if (mMenuButtonAnimator != null && mMenuButtonAnimator.isRunning()) {
+                mMenuButtonAnimator.cancel();
+            }
+            if (mIsShowCalendar) {
+                mMenuButtonAnimator = new ValueAnimator().ofFloat(1f, 0f);
+                mMenuButtonAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        Float value = (Float) animation.getAnimatedValue();
+                        mCalendarPager.setTranslationY(-mCalendarPager.getHeight() * value);
                     }
-                    RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) mAgendaView.getLayoutParams();
-                    param.addRule(RelativeLayout.BELOW, mCalendarPager.getId());
-                    ((RelativeLayout) mAgendaView.getParent()).updateViewLayout(mAgendaView, param);
-                }
+                });
+                mMenuButtonAnimator.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        if (mCalendarPager.getVisibility() != View.VISIBLE) {
+                            mCalendarPager.setVisibility(View.VISIBLE);
+                        }
+                        RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) mAgendaView.getLayoutParams();
+                        param.addRule(RelativeLayout.BELOW, mCalendarPager.getId());
+                        ((RelativeLayout) mAgendaView.getParent()).updateViewLayout(mAgendaView, param);
+                    }
 
-                @Override
-                public void onAnimationEnd(Animator animation) {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
 
-                }
+                    }
 
-                @Override
-                public void onAnimationCancel(Animator animation) {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-                }
+                    }
 
-                @Override
-                public void onAnimationRepeat(Animator animation) {
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-                }
-            });
-            mMenuButtonAnimator.setDuration(CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION);
-            mMenuButtonAnimator.start();
+                    }
+                });
+                mMenuButtonAnimator.setDuration(CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION);
+                mMenuButtonAnimator.start();
+            } else {
+                mMenuButtonAnimator = new ValueAnimator().ofFloat(0f, 1f);
+                mMenuButtonAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        Float value = (Float) animation.getAnimatedValue();
+                        mCalendarPager.setTranslationY(-mCalendarPager.getHeight() * value);
+                    }
+                });
+                mMenuButtonAnimator.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) mAgendaView.getLayoutParams();
+                        param.addRule(RelativeLayout.BELOW, 0);
+                        ((RelativeLayout) mAgendaView.getParent()).updateViewLayout(mAgendaView, param);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+                mMenuButtonAnimator.setDuration(CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION);
+                mMenuButtonAnimator.start();
+            }
         } else {
-            mMenuButtonAnimator = new ValueAnimator().ofFloat(0f, 1f);
-            final RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) mAgendaView.getLayoutParams();
-            param.addRule(RelativeLayout.BELOW, 0);
-            mMenuButtonAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    Float value = (Float) animation.getAnimatedValue();
-                    mCalendarPager.setTranslationY(-mCalendarPager.getHeight() * value);
-                }
-            });
-            mMenuButtonAnimator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) mAgendaView.getLayoutParams();
-                    param.addRule(RelativeLayout.BELOW, 0);
-                    ((RelativeLayout) mAgendaView.getParent()).updateViewLayout(mAgendaView, param);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
-            mMenuButtonAnimator.setDuration(CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION);
-            mMenuButtonAnimator.start();
+            if (mIsShowCalendar) {
+                mCalendarPager.setVisibility(View.VISIBLE);
+                RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) mAgendaView.getLayoutParams();
+                param.addRule(RelativeLayout.BELOW, mCalendarPager.getId());
+                ((RelativeLayout) mAgendaView.getParent()).updateViewLayout(mAgendaView, param);
+            } else {
+                mCalendarPager.setVisibility(View.INVISIBLE);
+                RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) mAgendaView.getLayoutParams();
+                param.addRule(RelativeLayout.BELOW, 0);
+                ((RelativeLayout) mAgendaView.getParent()).updateViewLayout(mAgendaView, param);
+            }
         }
     }
 
