@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -51,8 +50,7 @@ import bj4.yhh.mschallenge.provider.Schedule;
 import bj4.yhh.mschallenge.settings.MsChallengePreference;
 
 public class CalendarActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        CalendarDateView.Callback, ViewScheduleDialog.Callback {
+        implements CalendarDateView.Callback, ViewScheduleDialog.Callback {
 
     private static final String TAG = "CalendarActivity";
     private static final boolean DEBUG = Utilities.DEBUG;
@@ -138,9 +136,6 @@ public class CalendarActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         initCustomActionBar(savedInstanceState);
         mCalendarPager = (CalendarPager) findViewById(R.id.calendar_pager);
@@ -424,31 +419,6 @@ public class CalendarActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @Override
