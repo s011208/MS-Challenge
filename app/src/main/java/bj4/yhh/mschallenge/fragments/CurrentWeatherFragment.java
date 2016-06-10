@@ -2,12 +2,14 @@ package bj4.yhh.mschallenge.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,7 +31,11 @@ import bj4.yhh.mschallenge.weather.WeatherConfig;
  * Created by User on 2016/6/11.
  */
 public class CurrentWeatherFragment extends Fragment {
-    private static final int REQUEST_FIND_LOCATION = 10001;
+    private static final int REQUEST_FINE_LOCATION = 10001;
+
+    private static final String SHAREDPREFERENCE = "weather_fragment";
+    private static final String KEY_LOAD_TIME = "load_time";
+    private static final String KEY_DATA = "data";
 
     private Geocoder mGeocoder;
     private TextView mLocation;
@@ -59,7 +65,7 @@ public class CurrentWeatherFragment extends Fragment {
             mLocationHint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FIND_LOCATION);
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
                 }
             });
             mWeatherContainer.setVisibility(View.GONE);
@@ -70,7 +76,7 @@ public class CurrentWeatherFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_FIND_LOCATION) {
+        if (requestCode == REQUEST_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initLocation();
             }
@@ -106,10 +112,19 @@ public class CurrentWeatherFragment extends Fragment {
             protected TheDarkSkyForecastParser doInBackground(Void... params) {
                 Context context = getActivity();
                 if (context == null) return null;
-                Location currentLocation = Utilities.getLastBestLocation(context);
-                final String address = WeatherConfig.getQueryAddress(
-                        currentLocation.getLatitude(), currentLocation.getLongitude(), System.currentTimeMillis());
-                String data = Utilities.getJSONFromUrl(address);
+                SharedPreferences spref = context.getSharedPreferences(SHAREDPREFERENCE, Context.MODE_PRIVATE);
+                String data;
+                // data will be expired after an hour
+                if (spref.getLong(KEY_LOAD_TIME, -1) + Utilities.HOUR > SystemClock.elapsedRealtime()) {
+                    // using old data
+                    data = spref.getString(KEY_DATA, "");
+                } else {
+                    Location currentLocation = Utilities.getLastBestLocation(context);
+                    final String queryAddress = WeatherConfig.getQueryAddress(
+                            currentLocation.getLatitude(), currentLocation.getLongitude(), System.currentTimeMillis());
+                    data = Utilities.getJSONFromUrl(queryAddress);
+                    spref.edit().putLong(KEY_LOAD_TIME, SystemClock.elapsedRealtime()).putString(KEY_DATA, data).apply();
+                }
                 TheDarkSkyForecastParser parser = new TheDarkSkyForecastParser(data);
                 if (!parser.isDataValid()) return null;
                 return parser;
