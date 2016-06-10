@@ -48,6 +48,7 @@ import bj4.yhh.mschallenge.calendar.CalendarDateView;
 import bj4.yhh.mschallenge.calendar.CalendarPager;
 import bj4.yhh.mschallenge.dialogs.ViewScheduleDialog;
 import bj4.yhh.mschallenge.provider.Schedule;
+import bj4.yhh.mschallenge.settings.MsChallengePreference;
 
 public class CalendarActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -79,7 +80,7 @@ public class CalendarActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG, "onCreate activity id: " + CalendarActivity.this + ", mMonthString size: " + mMonthString.size());
+        Log.d(TAG, "onCreate activity id: " + CalendarActivity.this);
         setContentView(R.layout.activity_calendar);
         mCalendar.setTimeInMillis(System.currentTimeMillis());
         Utilities.clearCalendarOffset(mCalendar);
@@ -417,6 +418,8 @@ public class CalendarActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(CalendarActivity.this, MsChallengePreference.class);
+            startActivity(intent);
             return true;
         }
 

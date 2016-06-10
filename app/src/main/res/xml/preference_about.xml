@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/preference_about_category_about_me">
+        <Preference
+            android:summary="@string/preference_about_me_summary"
+            android:title="@string/preference_about_me_name" />
+
+        <Preference
+            android:key="linkedin_page"
+            android:title="@string/preference_about_me_linkedin_page" />
+
+        <Preference
+            android:key="github"
+            android:title="@string/preference_about_me_github" />
+
+        <Preference
+            android:key="facebook"
+            android:title="@string/preference_about_me_facebook" />
+
+        <Preference
+            android:key="email"
+            android:summary="@string/preference_about_me_email_summary"
+            android:title="@string/preference_about_me_email" />
+    </PreferenceCategory>
+</PreferenceScreen>

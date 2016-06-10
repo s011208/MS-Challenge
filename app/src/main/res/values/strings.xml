@@ -53,4 +53,17 @@
     <!-- permission dialog -->
     <string name="permission_dialog_location_title">Enable location</string>
     <string name="permission_dialog_location_message">Enable location for more fabulous functions for you!</string>
+
+    <!-- preference -->
+    <string name="preference_about_category_about_me">About me</string>
+    <string name="preference_about_me_name">Name</string>
+    <string name="preference_about_me_summary">YenHsun, Huang</string>
+    <string name="preference_about_me_linkedin_page">LinkedIn page</string>
+    <string name="preference_about_me_github">Github page</string>
+    <string name="preference_about_me_facebook">Facebook page</string>
+    <string name="preference_about_me_email">Email address</string>
+    <string name="preference_about_me_email_summary">s011208@gmail.com</string>
+    <string name="preference_about_me_email_subject">Hi YenHsun, I would like to contact with you</string>
+    <string name="preference_about_me_email_text">Yahoo, I am in your setting page!</string>
+    <string name="preference_about_me_failed_to_start_browser">Failed to start browser</string>
 </resources>
