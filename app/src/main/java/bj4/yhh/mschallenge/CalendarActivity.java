@@ -209,7 +209,7 @@ public class CalendarActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             toolbar.setContentInsetsAbsolute(0, 0);
-            toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.ic_settings_white_24dp));
+            toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.ic_account_box_outline_white_24dp));
         }
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
