@@ -36,4 +36,9 @@ public class WeatherConfig {
     public static int getIconResource(String iconString) {
         return sWeatherIconMap.get(iconString);
     }
+
+    public static String getQueryAddress(double latitude, double longitude, long time) {
+        return "https://api.forecast.io/forecast/" +
+                WeatherConfig.API_KEY + "/" + latitude + "," + longitude + "," + time / 1000;
+    }
 }

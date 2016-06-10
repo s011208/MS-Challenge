@@ -46,6 +46,7 @@ import bj4.yhh.mschallenge.agenda.Section;
 import bj4.yhh.mschallenge.calendar.CalendarDateView;
 import bj4.yhh.mschallenge.calendar.CalendarPager;
 import bj4.yhh.mschallenge.dialogs.ViewScheduleDialog;
+import bj4.yhh.mschallenge.fragments.CurrentWeatherFragment;
 import bj4.yhh.mschallenge.provider.Schedule;
 import bj4.yhh.mschallenge.settings.MsChallengePreference;
 
@@ -198,6 +199,8 @@ public class CalendarActivity extends AppCompatActivity
             }
         });
         switchCalendarVisibility(false);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.weather_fragment, new CurrentWeatherFragment()).commitAllowingStateLoss();
     }
 
     private void initCustomActionBar(Bundle savedInstanceState) {

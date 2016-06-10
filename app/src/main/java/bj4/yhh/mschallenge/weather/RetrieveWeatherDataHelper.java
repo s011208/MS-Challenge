@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
@@ -60,12 +59,9 @@ public class RetrieveWeatherDataHelper extends AsyncTask<Void, Void, Void> {
         if (!findDataInProvider) {
             // query from api
             try {
-                Location currentLocation = getLastBestLocation(context);
-                final String address = "https://api.forecast.io/forecast/" +
-                        WeatherConfig.API_KEY + "/" +
-                        currentLocation.getLatitude() + "," +
-                        currentLocation.getLongitude() + "," +
-                        mWeather.getDateTime() / 1000;
+                Location currentLocation = Utilities.getLastBestLocation(context);
+                final String address = WeatherConfig.getQueryAddress(
+                        currentLocation.getLatitude(), currentLocation.getLongitude(), mWeather.getDateTime());
                 if (DEBUG) {
                     Log.d(TAG, "query address: " + address);
                 }
@@ -110,29 +106,6 @@ public class RetrieveWeatherDataHelper extends AsyncTask<Void, Void, Void> {
             mWeatherTextView.setCompoundDrawablesWithIntrinsicBounds(WeatherConfig.getIconResource(mWeather.getIconString()), 0, 0, 0);
             mWeatherTextView.setText(mWeather.getTemperature() + "°");
             mWeatherTextView.setContentDescription(mWeather.getSummary());
-        }
-    }
-
-    private Location getLastBestLocation(Context context) throws SecurityException {
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-        long GPSLocationTime = 0;
-        if (null != locationGPS) {
-            GPSLocationTime = locationGPS.getTime();
-        }
-
-        long NetLocationTime = 0;
-
-        if (null != locationNet) {
-            NetLocationTime = locationNet.getTime();
-        }
-
-        if (0 < GPSLocationTime - NetLocationTime) {
-            return locationGPS;
-        } else {
-            return locationNet;
         }
     }
 

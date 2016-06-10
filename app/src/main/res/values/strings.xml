@@ -67,4 +67,7 @@
     <string name="preference_about_me_email_subject">Hi YenHsun, I would like to contact with you</string>
     <string name="preference_about_me_email_text">Yahoo, I am in your setting page!</string>
     <string name="preference_about_me_failed_to_start_browser">Failed to start browser</string>
+
+    <!-- current weather fragment -->
+    <string name="current_weather_fragment_current_weather">Current weather</string>
 </resources>

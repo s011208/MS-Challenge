@@ -44,4 +44,8 @@
     <integer name="view_schedule_dialog_title_max_line">3</integer>
     <dimen name="view_schedule_dialog_drawable_padding">10dp</dimen>
     <dimen name="view_schedule_dialog_text_size">16sp</dimen>
+
+    <!-- current weather fragment -->
+    <dimen name="current_weather_fragment_drawable_padding">8dp</dimen>
+    <dimen name="current_weather_fragment_padding">8dp</dimen>
 </resources>
