@@ -16,7 +16,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import bj4.yhh.mschallenge.R;
-import bj4.yhh.mschallenge.Utilities;
 
 /**
  * Created by yenhsunhuang on 2016/6/3.
@@ -170,9 +169,9 @@ public class CalendarDateViewAdapter extends BaseAdapter {
         return mMonth;
     }
 
-    private static class ViewHolder {
-        private TextView mDayText;
-        private ImageView mDot;
-        private ImageView mDayTextState;
+    static class ViewHolder {
+        TextView mDayText;
+        ImageView mDot;
+        ImageView mDayTextState;
     }
 }

@@ -87,13 +87,21 @@ public class CalendarDateView extends FullyExpandedGridView {
         for (int i = 0; i < mCalendarDateViewAdapter.getCount(); ++i) {
             CalendarItem item = mCalendarDateViewAdapter.getItem(i);
             if (item instanceof CalendarDate) {
+                View dayTestState = ((CalendarDateViewAdapter.ViewHolder) getChildAt(i).getTag()).mDayTextState;
+                View dot = ((CalendarDateViewAdapter.ViewHolder) getChildAt(i).getTag()).mDot;
                 if (((CalendarDate) item).getDate().equals(selectedDate)) {
                     pressedPosition = i;
+                    dayTestState.setVisibility(View.VISIBLE);
+                    dot.setVisibility(View.INVISIBLE);
+                    mCalendarDateViewAdapter.setPressedPosition(pressedPosition);
+                } else {
+                    if (dayTestState.getVisibility() == View.VISIBLE) {
+                        dayTestState.setVisibility(View.INVISIBLE);
+                        dot.setVisibility(((CalendarDate) item).hasSchedule() ? View.VISIBLE : View.INVISIBLE);
+                    }
                 }
             }
         }
-        mCalendarDateViewAdapter.setPressedPosition(pressedPosition);
-//        mCalendarDateViewAdapter.notifyDataSetInvalidated();
     }
 
     public interface Callback {
