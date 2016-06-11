@@ -199,8 +199,6 @@ public class CalendarActivity extends AppCompatActivity
             }
         });
         switchCalendarVisibility(false);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.weather_fragment, new CurrentWeatherFragment()).commitAllowingStateLoss();
     }
 
     private void initCustomActionBar(Bundle savedInstanceState) {
