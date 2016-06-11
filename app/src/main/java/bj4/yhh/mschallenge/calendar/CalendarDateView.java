@@ -62,8 +62,16 @@ public class CalendarDateView extends FullyExpandedGridView {
 
     public void setArguments(int year, int month, Callback cb) {
         mCallback = new WeakReference<>(cb);
+        if (mCalendarDateViewAdapter != null) return;
         mCalendarDateViewAdapter = new CalendarDateViewAdapter(mContext, year, month, cb.getSelectedDate());
         setAdapter(mCalendarDateViewAdapter);
+    }
+
+    public void updateArguments(int year, int month, Callback cb) {
+        if (mCallback == null || mCallback.get() != cb) {
+            mCallback = new WeakReference<>(cb);
+        }
+        mCalendarDateViewAdapter.update(year, month, mCallback.get().getSelectedDate());
     }
 
     public int getYear() {
@@ -72,10 +80,6 @@ public class CalendarDateView extends FullyExpandedGridView {
 
     public int getMonth() {
         return mCalendarDateViewAdapter.getMonth();
-    }
-
-    public void onDestroy() {
-        mCallback = null;
     }
 
     public void updateSelectedDate(Date selectedDate) {
@@ -89,7 +93,7 @@ public class CalendarDateView extends FullyExpandedGridView {
             }
         }
         mCalendarDateViewAdapter.setPressedPosition(pressedPosition);
-        mCalendarDateViewAdapter.notifyDataSetInvalidated();
+//        mCalendarDateViewAdapter.notifyDataSetInvalidated();
     }
 
     public interface Callback {

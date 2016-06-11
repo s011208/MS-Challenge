@@ -30,7 +30,7 @@ public class CalendarDateViewAdapter extends BaseAdapter {
 
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
-    private final int mYear, mMonth;
+    private int mYear, mMonth;
     private ArrayList<CalendarItem> mData = new ArrayList<>();
     private Calendar mCalendar = Calendar.getInstance();
     private int mFirstPositionOfDayOfMonth, mLastPositionOfDayOfMonth;
@@ -45,6 +45,16 @@ public class CalendarDateViewAdapter extends BaseAdapter {
         mCalendar.set(Calendar.YEAR, mYear);
         mCalendar.set(Calendar.MONTH, mMonth);
         mPressedDate = pressedDate;
+        initData();
+    }
+
+    public void update(int y, int m, Date pressedDate) {
+        mYear = y;
+        mMonth = m;
+        mCalendar.set(Calendar.YEAR, mYear);
+        mCalendar.set(Calendar.MONTH, mMonth);
+        mPressedDate = pressedDate;
+        mPressedPosition = -1;
         initData();
     }
 

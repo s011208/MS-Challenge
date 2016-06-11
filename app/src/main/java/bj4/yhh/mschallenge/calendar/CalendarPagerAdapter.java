@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * Created by yenhsunhuang on 2016/6/3.
@@ -20,6 +21,7 @@ public class CalendarPagerAdapter extends PagerAdapter {
     private final Context mContext;
     private final Calendar mCalendar = Calendar.getInstance();
     private final Map<Integer, CalendarDateView> mViewsMap = new HashMap<>();
+    private final Stack<CalendarDateView> mCalendarDateViewCache = new Stack<>();
 
     public CalendarPagerAdapter(Context context) {
         mContext = context;
@@ -39,11 +41,17 @@ public class CalendarPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        CalendarDateView calendarView = new CalendarDateView(mContext);
+        CalendarDateView calendarView;
         Date pageDate = calculateDateByPosition(mBaseYear, mBaseMonth, position);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(pageDate);
-        calendarView.setArguments(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), (CalendarDateView.Callback) mContext);
+        if (mCalendarDateViewCache.isEmpty()) {
+            calendarView = new CalendarDateView(mContext);
+            calendarView.setArguments(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), (CalendarDateView.Callback) mContext);
+        } else {
+            calendarView = mCalendarDateViewCache.pop();
+            calendarView.updateArguments(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), (CalendarDateView.Callback) mContext);
+        }
         container.addView(calendarView);
         calendarView.setTag(CalendarPagerAdapter.class.getName() + position);
         mViewsMap.put(position, calendarView);
@@ -63,11 +71,9 @@ public class CalendarPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        if (object instanceof CalendarDateView) {
-            ((CalendarDateView) object).onDestroy();
-        }
         mViewsMap.remove(position);
         container.removeView((View) object);
+        mCalendarDateViewCache.push((CalendarDateView) object);
     }
 
     public int getItemPosition(Object object) {
