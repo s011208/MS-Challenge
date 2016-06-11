@@ -46,7 +46,6 @@ import bj4.yhh.mschallenge.agenda.Section;
 import bj4.yhh.mschallenge.calendar.CalendarDateView;
 import bj4.yhh.mschallenge.calendar.CalendarPager;
 import bj4.yhh.mschallenge.dialogs.ViewScheduleDialog;
-import bj4.yhh.mschallenge.fragments.CurrentWeatherFragment;
 import bj4.yhh.mschallenge.provider.Schedule;
 import bj4.yhh.mschallenge.settings.MsChallengePreference;
 
@@ -170,6 +169,20 @@ public class CalendarActivity extends AppCompatActivity
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(newItemDateTime);
                 mSelectedDateTime = calendar.getTime();
+                int[] currentPagerMonthAndYear = mCalendarPager.getCurrentMonthAndYear();
+                final int newItemYear = calendar.get(Calendar.YEAR);
+                final int newItemMonth = calendar.get(Calendar.MONTH);
+                if (currentPagerMonthAndYear[0] < newItemYear) {
+                    mCalendarPager.setCurrentItem(mCalendarPager.getCurrentItem() + 1);
+                } else if (currentPagerMonthAndYear[0] > newItemYear) {
+                    mCalendarPager.setCurrentItem(mCalendarPager.getCurrentItem() - 1);
+                } else {
+                    if (currentPagerMonthAndYear[1] < newItemMonth) {
+                        mCalendarPager.setCurrentItem(mCalendarPager.getCurrentItem() + 1);
+                    } else if (currentPagerMonthAndYear[1] > newItemMonth) {
+                        mCalendarPager.setCurrentItem(mCalendarPager.getCurrentItem() - 1);
+                    }
+                }
                 mCalendarPager.setSelectedDate(calendar.getTime());
             }
         });
