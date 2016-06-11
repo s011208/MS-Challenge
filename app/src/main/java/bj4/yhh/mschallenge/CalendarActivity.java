@@ -173,14 +173,14 @@ public class CalendarActivity extends AppCompatActivity
                 final int newItemYear = calendar.get(Calendar.YEAR);
                 final int newItemMonth = calendar.get(Calendar.MONTH);
                 if (currentPagerMonthAndYear[0] < newItemYear) {
-                    mCalendarPager.setCurrentItem(mCalendarPager.getCurrentItem() + 1);
+                    mCalendarPager.setCurrentItem(mCalendarPager.getCurrentItem() + 1, true);
                 } else if (currentPagerMonthAndYear[0] > newItemYear) {
-                    mCalendarPager.setCurrentItem(mCalendarPager.getCurrentItem() - 1);
+                    mCalendarPager.setCurrentItem(mCalendarPager.getCurrentItem() - 1, true);
                 } else {
                     if (currentPagerMonthAndYear[1] < newItemMonth) {
-                        mCalendarPager.setCurrentItem(mCalendarPager.getCurrentItem() + 1);
+                        mCalendarPager.setCurrentItem(mCalendarPager.getCurrentItem() + 1, true);
                     } else if (currentPagerMonthAndYear[1] > newItemMonth) {
-                        mCalendarPager.setCurrentItem(mCalendarPager.getCurrentItem() - 1);
+                        mCalendarPager.setCurrentItem(mCalendarPager.getCurrentItem() - 1, true);
                     }
                 }
                 mCalendarPager.setSelectedDate(calendar.getTime());
