@@ -127,7 +127,7 @@ public class Utilities {
                         " and " + TableScheduleContent.COLUMN_START_TIME + " < " + scheduleFinishRange +
                         ") or (" + TableScheduleContent.COLUMN_FINISH_TIME + " > " + scheduleStartRange +
                         " and " + TableScheduleContent.COLUMN_FINISH_TIME + " < " + scheduleFinishRange + ")",
-                null, TableScheduleContent.COLUMN_IS_WHOLE_DAY + " desc, " + TableScheduleContent.COLUMN_START_TIME);
+                null, TableScheduleContent.COLUMN_IS_WHOLE_DAY + " desc, " + TableScheduleContent.COLUMN_START_TIME + ", " + TableScheduleContent.COLUMN_ID);
         return Schedule.fromCursor(scheduleCursor);
     }
 

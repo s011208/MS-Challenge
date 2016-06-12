@@ -33,6 +33,16 @@
         <item>Before 1 hour</item>
     </string-array>
 
+    <string-array name="schedule_notify_start_time">
+        <item>""</item>
+        <item>Now</item>
+        <item>5 minutes later</item>
+        <item>10 minutes later</item>
+        <item>15 minutes later</item>
+        <item>30 minutes later</item>
+        <item>1 hour later</item>
+    </string-array>
+
     <!-- agenda view-->
     <string name="agenda_view_yesterday">Yesterday</string>
     <string name="agenda_view_today">Today</string>

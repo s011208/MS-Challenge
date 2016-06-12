@@ -39,6 +39,17 @@
         <provider
             android:name=".provider.ScheduleProvider"
             android:authorities="bj4.yhh.mschallenge.ScheduleProvider" />
+
+        <service android:name=".services.NotificationService" />
+
+        <receiver
+            android:name=".receivers.StartServiceReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

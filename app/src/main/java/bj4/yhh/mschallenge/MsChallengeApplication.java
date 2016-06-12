@@ -3,7 +3,7 @@ package bj4.yhh.mschallenge;
 import android.app.Application;
 import android.content.Intent;
 
-import java.lang.ref.WeakReference;
+import bj4.yhh.mschallenge.services.NotificationService;
 
 /**
  * Created by yenhsunhuang on 2016/6/9.
@@ -16,7 +16,7 @@ public class MsChallengeApplication extends Application {
     }
 
     private void startWeatherService() {
-        Intent intent = new Intent(MsChallengeApplication.this, WeakReference.class);
-        startService(intent);
+        Intent startServiceIntent = new Intent(MsChallengeApplication.this, NotificationService.class);
+        startService(startServiceIntent);
     }
 }

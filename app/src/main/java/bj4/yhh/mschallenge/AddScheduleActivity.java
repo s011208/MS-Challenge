@@ -183,6 +183,8 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
     private Date generateDateAndTime(int y, int m, int d, int h, int min) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(y, m, d, h, min);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
     }
 
@@ -251,6 +253,8 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
                     calendar.setTime(mStartDateData);
                     calendar.set(Calendar.HOUR_OF_DAY, 0);
                     calendar.set(Calendar.MINUTE, 0);
+                    calendar.set(Calendar.SECOND, 0);
+                    calendar.set(Calendar.MILLISECOND, 0);
                     mStartDateData.setTime(calendar.getTimeInMillis());
                     mStartDate.setText(getDateStringFormat(mStartDateData));
                     mStartTime.setText(getTimeStringFormat(mStartDateData));
@@ -258,6 +262,8 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
                     calendar.setTime(mFinishDateData);
                     calendar.set(Calendar.HOUR_OF_DAY, 1);
                     calendar.set(Calendar.MINUTE, 0);
+                    calendar.set(Calendar.SECOND, 0);
+                    calendar.set(Calendar.MILLISECOND, 0);
                     mFinishDateData.setTime(calendar.getTimeInMillis());
                     mFinishDate.setText(getDateStringFormat(mFinishDateData));
                     mFinishTime.setText(getTimeStringFormat(mFinishDateData));

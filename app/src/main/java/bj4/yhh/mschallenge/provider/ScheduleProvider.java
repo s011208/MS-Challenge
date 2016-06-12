@@ -49,6 +49,7 @@ public class ScheduleProvider extends ContentProvider {
             mDatabase.delete(TableScheduleContent.TABLE_NAME, null, null);
         }
         if (DEBUG_DATABASE_DATA) {
+            printDatabaseData(TableScheduleContent.URI);
             printDatabaseData(TableWeather.URI);
         }
         return true;
