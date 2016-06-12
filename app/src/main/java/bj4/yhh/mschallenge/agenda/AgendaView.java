@@ -77,13 +77,12 @@ public class AgendaView extends PinnedSectionListView {
 
     private void setDate(long startDateTime, long finishDateTime, long selectedDateTime) {
         mDefaultSelectedTime = selectedDateTime;
-        if (mAdapter == null) {
+        if (mAdapter == null || mAdapter.setDateTimeRange(startDateTime, finishDateTime, selectedDateTime)) {
             mAdapter = new AgendaAdapter(mContext, startDateTime, finishDateTime, selectedDateTime, mOnDataLoadedListener);
             setAdapter(mAdapter);
         } else {
-            if (!mAdapter.setDateTimeRange(startDateTime, finishDateTime, selectedDateTime)) {
-                updateSelection();
-            }
+            mAdapter.setDateTimeRange(startDateTime, finishDateTime, selectedDateTime);
+            updateSelection();
         }
         mStartTime = startDateTime;
         mFinishTime = finishDateTime;
