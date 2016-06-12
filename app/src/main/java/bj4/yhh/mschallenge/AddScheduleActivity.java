@@ -56,7 +56,6 @@ import bj4.yhh.mschallenge.provider.TableScheduleContent;
  */
 public class AddScheduleActivity extends AppCompatActivity implements View.OnClickListener,
         ScheduleDescriptionDialog.Callback {
-
     public static final String EXTRA_YEAR = "e_year";
     public static final String EXTRA_MONTH = "e_month";
     public static final String EXTRA_DAY = "e_day";
@@ -67,16 +66,17 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
     public static final String EXTRA_SCHEDULE = "e_schedule";
     public static final String EXTRA_ID = "e_id";
     public static final String EXTRA_RESULT_REASON = "e_result_reason";
+
     private static final String EXTRA_TITLE = "e_title";
     private static final String EXTRA_IS_WHOLE_DAY = "e_is_whole_day";
     private static final String EXTRA_LOCATION = "e_location";
     private static final String EXTRA_NOTIFY = "e_notify";
     private static final String EXTRA_MEMBER = "e_member";
     private static final String EXTRA_DESCRIPTION = "e_description";
+
     private static final String TAG = "AddScheduleActivity";
     private static final boolean DEBUG = Utilities.DEBUG;
-    private static final long HOUR = Utilities.HOUR;
-    private static final long DAY = Utilities.DAY;
+
 
     private AutoCompleteTextView mTitle;
     private EditText mLocation;
@@ -85,18 +85,16 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
     private Switch mWholeDaySwitcher;
     private LinearLayout mStartDateContainer, mFinishDateContainer;
     private RelativeLayout mWholeDayContainer, mNotifyContainer;
-
-    private ValueAnimator mSwitcherAnimation;
-
     private ImageView mOk, mCancel;
 
+    private ValueAnimator mSwitcherAnimation;
     private Date mStartDateData, mFinishDateData;
 
     private String[] mNotifyStringArray;
+    private String mDescriptionData, mLocationData, mTitleData;
+
     private int mNotifyDataIndex = TableScheduleContent.SCHEDULE_NOTIFY_NONE;
     private long mUpdateId = -1;
-
-    private String mDescriptionData, mLocationData, mTitleData;
     private boolean mIsWholeDay;
 
     @Override
@@ -131,7 +129,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
                 mTitleData = schedule.getTitle();
                 mUpdateId = schedule.getId();
             } catch (JSONException e) {
-                e.printStackTrace();
+                if (DEBUG) Log.w(TAG, "unexpected exception", e);
             }
         } else {
             if (getIntent() != null) {
@@ -155,7 +153,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
             mStartDateData = generateDateAndTime(year, month, day, hour, minute);
             mFinishDateData = generateDateAndTime(year, month, day, hour, minute);
             // one hour later
-            mFinishDateData.setTime(mFinishDateData.getTime() + HOUR);
+            mFinishDateData.setTime(mFinishDateData.getTime() + Utilities.HOUR);
         }
         mNotifyStringArray = getResources().getStringArray(R.array.schedule_notify_time_list);
         initComponents();
@@ -502,7 +500,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
                 mStartDateData = generateDateAndTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
                 mStartTime.setText(getTimeStringFormat(mStartDateData));
                 if (mStartDateData.getTime() > mFinishDateData.getTime()) {
-                    mFinishDateData.setTime(mStartDateData.getTime() + HOUR);
+                    mFinishDateData.setTime(mStartDateData.getTime() + Utilities.HOUR);
                     mFinishTime.setText(getTimeStringFormat(mFinishDateData));
                     mFinishDate.setText(getDateStringFormat(mFinishDateData));
                 }
@@ -520,7 +518,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
                 mFinishDateData = generateDateAndTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
                 mFinishTime.setText(getTimeStringFormat(mFinishDateData));
                 if (mFinishDateData.getTime() < mStartDateData.getTime()) {
-                    mStartDateData.setTime(mFinishDateData.getTime() - HOUR);
+                    mStartDateData.setTime(mFinishDateData.getTime() - Utilities.HOUR);
                     mStartTime.setText(getTimeStringFormat(mStartDateData));
                     mStartDate.setText(getDateStringFormat(mStartDateData));
                 }
@@ -538,8 +536,8 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
                 mStartDateData = generateDateAndTime(year, monthOfYear, dayOfMonth, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
                 mStartDate.setText(getDateStringFormat(mStartDateData));
                 if (mStartDateData.getTime() > mFinishDateData.getTime()) {
-                    final long hourAndMinuteData = mFinishDateData.getTime() % (DAY);
-                    final long newFinishDateData = (mStartDateData.getTime() / DAY) * DAY + hourAndMinuteData;
+                    final long hourAndMinuteData = mFinishDateData.getTime() % (Utilities.DAY);
+                    final long newFinishDateData = (mStartDateData.getTime() / Utilities.DAY) * Utilities.DAY + hourAndMinuteData;
                     mFinishDateData.setTime(newFinishDateData);
                     mFinishDate.setText(getDateStringFormat(mFinishDateData));
                     mFinishTime.setText(getTimeStringFormat(mFinishDateData));
@@ -558,8 +556,8 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
                 mFinishDateData = generateDateAndTime(year, monthOfYear, dayOfMonth, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
                 mFinishDate.setText(getDateStringFormat(mFinishDateData));
                 if (mFinishDateData.getTime() < mStartDateData.getTime()) {
-                    final long hourAndMinuteData = mStartDateData.getTime() % (DAY);
-                    final long newStartDateData = (mFinishDateData.getTime() / DAY) * DAY + hourAndMinuteData;
+                    final long hourAndMinuteData = mStartDateData.getTime() % (Utilities.DAY);
+                    final long newStartDateData = (mFinishDateData.getTime() / Utilities.DAY) * Utilities.DAY + hourAndMinuteData;
                     mStartDateData.setTime(newStartDateData);
                     mStartDate.setText(getDateStringFormat(mStartDateData));
                     mStartTime.setText(getTimeStringFormat(mStartDateData));

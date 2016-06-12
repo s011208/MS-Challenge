@@ -59,10 +59,10 @@ public class CalendarActivity extends AppCompatActivity
     private static final int REQUEST_ADD_NEW_SCHEDULE = 1000;
     private static final int SNAKE_BAR_DELAY_TIME = 1000;
 
+    private static final int REQUEST_PERMISSION_LOCATION = 1000;
+
     private static final String EXTRA_MENU_BUTTON_TEXT = "e_menu_button_text";
     private static final String EXTRA_IS_SHOW_CALENDAR = "e_is_show_calendar";
-
-    private static final int REQUEST_PERMISSION_LOCATION = 1000;
 
     private final Calendar mCalendar = Calendar.getInstance();
     private final List<String> mMonthString = Utilities.getMonthString();
