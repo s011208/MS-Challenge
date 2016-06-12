@@ -52,29 +52,36 @@ public class NotificationService extends Service {
                         int notify = data.getInt(indexOfNotify);
                         final long timeDiff = startTime - currentTime;
                         boolean sendNotify = false;
+                        long notificationDiffTime = 0;
                         if (notify == TableScheduleContent.SCHEDULE_NOTIFY_BEFORE_5_MINUTES) {
                             if ((timeDiff >= 5 * Utilities.MINUTE && timeDiff <= 6 * Utilities.MINUTE)) {
                                 sendNotify = true;
+                                notificationDiffTime = 5 * Utilities.MINUTE;
                             }
                         } else if (notify == TableScheduleContent.SCHEDULE_NOTIFY_BEFORE_10_MINUTES) {
                             if ((timeDiff >= 10 * Utilities.MINUTE && timeDiff <= 11 * Utilities.MINUTE)) {
                                 sendNotify = true;
+                                notificationDiffTime = 10 * Utilities.MINUTE;
                             }
                         } else if (notify == TableScheduleContent.SCHEDULE_NOTIFY_BEFORE_15_MINUTES) {
                             if ((timeDiff >= 15 * Utilities.MINUTE && timeDiff <= 16 * Utilities.MINUTE)) {
                                 sendNotify = true;
+                                notificationDiffTime = 15 * Utilities.MINUTE;
                             }
                         } else if (notify == TableScheduleContent.SCHEDULE_NOTIFY_BEFORE_30_MINUTES) {
                             if ((timeDiff >= 30 * Utilities.MINUTE && timeDiff <= 31 * Utilities.MINUTE)) {
                                 sendNotify = true;
+                                notificationDiffTime = 30 * Utilities.MINUTE;
                             }
                         } else if (notify == TableScheduleContent.SCHEDULE_NOTIFY_BEFORE_1_HOUR) {
                             if ((timeDiff >= 60 * Utilities.MINUTE && timeDiff <= 61 * Utilities.MINUTE)) {
                                 sendNotify = true;
+                                notificationDiffTime = 60 * Utilities.MINUTE;
                             }
                         } else if (notify == TableScheduleContent.SCHEDULE_NOTIFY_RIGHT_IN_TIME) {
                             if ((timeDiff >= 0 * Utilities.MINUTE && timeDiff <= 1 * Utilities.MINUTE)) {
                                 sendNotify = true;
+                                notificationDiffTime = 0;
                             }
                         }
                         String notifyText = getResources().getStringArray(R.array.schedule_notify_start_time)[notify];
@@ -82,7 +89,7 @@ public class NotificationService extends Service {
                             Log.i(TAG, "sendNotify: " + sendNotify + ", title: " + title + ", des: " + description + ", notifyText: " + notifyText);
 
                         if (sendNotify) {
-                            sendNotification((int) (id % Integer.MAX_VALUE), title, description, notifyText);
+                            sendNotification((int) (id % Integer.MAX_VALUE), title, description, notifyText, startTime - notificationDiffTime);
                         }
                     }
                 } finally {
@@ -109,14 +116,14 @@ public class NotificationService extends Service {
         return START_STICKY;
     }
 
-    private void sendNotification(int id, String title, String content, String subText) {
+    private void sendNotification(int id, String title, String content, String subText, long when) {
         Notification.Builder builder = new Notification.Builder(NotificationService.this);
         builder.setAutoCancel(true);
         builder.setSmallIcon(R.drawable.ic_calendar_clock_white_36dp);
         builder.setContentTitle(title);
         builder.setContentText(content);
         builder.setSubText(subText);
-        builder.setWhen(System.currentTimeMillis());
+        builder.setWhen(when);
         builder.setDefaults(Notification.DEFAULT_SOUND);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setColor(getResources().getColor(R.color.colorPrimary));
