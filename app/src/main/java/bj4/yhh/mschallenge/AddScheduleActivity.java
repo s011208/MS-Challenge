@@ -22,7 +22,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -67,16 +66,13 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
     public static final String EXTRA_FINISH_TIME = "e_finish_time";
     public static final String EXTRA_SCHEDULE = "e_schedule";
     public static final String EXTRA_ID = "e_id";
-
+    public static final String EXTRA_RESULT_REASON = "e_result_reason";
     private static final String EXTRA_TITLE = "e_title";
     private static final String EXTRA_IS_WHOLE_DAY = "e_is_whole_day";
     private static final String EXTRA_LOCATION = "e_location";
     private static final String EXTRA_NOTIFY = "e_notify";
     private static final String EXTRA_MEMBER = "e_member";
     private static final String EXTRA_DESCRIPTION = "e_description";
-
-    public static final String EXTRA_RESULT_REASON = "e_result_reason";
-
     private static final String TAG = "AddScheduleActivity";
     private static final boolean DEBUG = Utilities.DEBUG;
     private static final long HOUR = Utilities.HOUR;
@@ -251,6 +247,20 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
                 if (mSwitcherAnimation.isRunning()) mSwitcherAnimation.cancel();
                 if (isChecked) {
                     mSwitcherAnimation.start();
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(mStartDateData);
+                    calendar.set(Calendar.HOUR_OF_DAY, 0);
+                    calendar.set(Calendar.MINUTE, 0);
+                    mStartDateData.setTime(calendar.getTimeInMillis());
+                    mStartDate.setText(getDateStringFormat(mStartDateData));
+                    mStartTime.setText(getTimeStringFormat(mStartDateData));
+
+                    calendar.setTime(mFinishDateData);
+                    calendar.set(Calendar.HOUR_OF_DAY, 1);
+                    calendar.set(Calendar.MINUTE, 0);
+                    mFinishDateData.setTime(calendar.getTimeInMillis());
+                    mFinishDate.setText(getDateStringFormat(mFinishDateData));
+                    mFinishTime.setText(getTimeStringFormat(mFinishDateData));
                 } else {
                     mSwitcherAnimation.reverse();
                 }
