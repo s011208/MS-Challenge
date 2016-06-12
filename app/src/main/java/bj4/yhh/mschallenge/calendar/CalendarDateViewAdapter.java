@@ -20,7 +20,7 @@ import bj4.yhh.mschallenge.R;
 /**
  * Created by yenhsunhuang on 2016/6/3.
  */
-public class CalendarDateViewAdapter extends BaseAdapter {
+public class CalendarDateViewAdapter extends BaseAdapter implements RetrieveCalendarDataHelper.Callback {
     private static final String TAG = "CalendarDateViewAdapter";
     private static final boolean DEBUG = false;
 
@@ -62,35 +62,35 @@ public class CalendarDateViewAdapter extends BaseAdapter {
     }
 
     private void initData() {
-        new RetrieveCalendarDataHelper(mContext, mYear, mMonth, new RetrieveCalendarDataHelper.Callback() {
-            @Override
-            public void onPositionOfDayRetrieved(int[] positions) {
-                if (positions == null) return;
-                mFirstPositionOfDayOfMonth = positions[0];
-                mLastPositionOfDayOfMonth = positions[1];
-            }
+        new RetrieveCalendarDataHelper(mContext, mYear, mMonth, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-            @Override
-            public void onDataRetrieved(ArrayList<CalendarItem> data) {
-                if (data == null) return;
-                mData.clear();
-                mData.addAll(data);
-                for (int i = 0; i < mData.size(); ++i) {
-                    CalendarItem item = mData.get(i);
-                    if (item instanceof CalendarDate) {
-                        if (((CalendarDate) item).getDate().equals(mPressedDate)) {
-                            setPressedPosition(i);
-                            break;
-                        }
-                    }
+    @Override
+    public void onPositionOfDayRetrieved(int[] positions) {
+        if (positions == null) return;
+        mFirstPositionOfDayOfMonth = positions[0];
+        mLastPositionOfDayOfMonth = positions[1];
+    }
+
+    @Override
+    public void onDataRetrieved(ArrayList<CalendarItem> data) {
+        if (data == null) return;
+        mData.clear();
+        mData.addAll(data);
+        for (int i = 0; i < mData.size(); ++i) {
+            CalendarItem item = mData.get(i);
+            if (item instanceof CalendarDate) {
+                if (((CalendarDate) item).getDate().equals(mPressedDate)) {
+                    setPressedPosition(i);
+                    break;
                 }
             }
+        }
+    }
 
-            @Override
-            public void onFinishLoading() {
-                notifyDataSetChanged();
-            }
-        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    @Override
+    public void onFinishLoading() {
+        notifyDataSetChanged();
     }
 
     @Override

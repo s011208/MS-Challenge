@@ -17,11 +17,6 @@ import bj4.yhh.mschallenge.provider.TableWeather;
 public class RetrieveAgendaDataHelper extends AsyncTask<Void, Void, ArrayList<AgendaItem>> {
     private static final String TAG = "RetrieveAgendaHelper";
     private static final boolean DEBUG = false;
-
-    public interface Callback {
-        void onDataRetrieved(ArrayList<AgendaItem> data);
-    }
-
     private final WeakReference<Context> mContext;
     private final long mStartDateTime, mFinishDateTime;
     private final WeakReference<Callback> mCallback;
@@ -37,7 +32,9 @@ public class RetrieveAgendaDataHelper extends AsyncTask<Void, Void, ArrayList<Ag
     protected ArrayList<AgendaItem> doInBackground(Void... params) {
         final ArrayList<AgendaItem> rtn = new ArrayList<>();
         final Context context = mContext.get();
-        if (context == null) return rtn;
+        if (context == null) {
+            return rtn;
+        }
         long scheduleStartRange = mStartDateTime;
         long scheduleFinishRange = mFinishDateTime + Utilities.DAY - Utilities.SECOND; // 23:59:59
         ArrayList<Schedule> schedules = Utilities.getSchedulesBetweenDate(scheduleStartRange, scheduleFinishRange, context);
@@ -74,7 +71,13 @@ public class RetrieveAgendaDataHelper extends AsyncTask<Void, Void, ArrayList<Ag
     @Override
     protected void onPostExecute(ArrayList<AgendaItem> agendaItems) {
         final Callback cb = mCallback.get();
-        if (cb == null) return;
+        if (cb == null) {
+            return;
+        }
         cb.onDataRetrieved(agendaItems);
+    }
+
+    public interface Callback {
+        void onDataRetrieved(ArrayList<AgendaItem> data);
     }
 }

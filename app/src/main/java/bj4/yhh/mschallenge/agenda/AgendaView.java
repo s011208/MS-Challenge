@@ -132,6 +132,9 @@ public class AgendaView extends PinnedSectionListView {
 
     private void updateSelection() {
         int index = findIndexOfSelectedDateTime();
+        if (DEBUG) {
+            Log.d(TAG, "index: " + index);
+        }
         if (index != -1) {
             setSelection(index);
         }

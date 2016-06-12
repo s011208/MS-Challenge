@@ -44,6 +44,8 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
     private Callback mCallback;
     private int mWindowBackgroundColor;
 
+    private RetrieveAgendaDataHelper.Callback mRetrieveAgendaDataHelperCallback;
+
     public AgendaAdapter(Context context, long startDateTime, long finishDateTime, long selectedDateTime, Callback cb) {
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -84,17 +86,20 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
     }
 
     private void initData(final boolean reload) {
-        new RetrieveAgendaDataHelper(mContext, mStartDateTime, mFinishDateTime, new RetrieveAgendaDataHelper.Callback() {
-            @Override
-            public void onDataRetrieved(ArrayList<AgendaItem> data) {
-                mItems.clear();
-                mItems.addAll(data);
-                if (mCallback != null) {
-                    mCallback.onDataLoaded(reload);
+        if (mRetrieveAgendaDataHelperCallback == null) {
+            mRetrieveAgendaDataHelperCallback = new RetrieveAgendaDataHelper.Callback() {
+                @Override
+                public void onDataRetrieved(ArrayList<AgendaItem> data) {
+                    mItems.clear();
+                    mItems.addAll(data);
+                    if (mCallback != null) {
+                        mCallback.onDataLoaded(reload);
+                    }
+                    notifyDataSetChanged();
                 }
-                notifyDataSetChanged();
-            }
-        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            };
+        }
+        new RetrieveAgendaDataHelper(mContext, mStartDateTime, mFinishDateTime, mRetrieveAgendaDataHelperCallback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -324,6 +329,18 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
         return viewType == ITEM_VIEW_TYPE_SECTION;
     }
 
+    private void setWindowBackgroundColor() {
+        try {
+            int[] backgroundColorAttr = new int[]{android.R.attr.windowBackground};
+            int indexOfAttrBackgroundColor = 0;
+            TypedArray a = mContext.obtainStyledAttributes(backgroundColorAttr);
+            mWindowBackgroundColor = a.getColor(indexOfAttrBackgroundColor, -1);
+            a.recycle();
+        } catch (Exception e) {
+            mWindowBackgroundColor = Color.WHITE;
+        }
+    }
+
     public interface Callback {
         void onDataLoaded(boolean reload);
     }
@@ -343,17 +360,5 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
     private static class WeatherViewHolder {
         TextView mWeatherTime, mWeather;
         RelativeLayout mWeatherContainer;
-    }
-
-    private void setWindowBackgroundColor() {
-        try {
-            int[] backgroundColorAttr = new int[]{android.R.attr.windowBackground};
-            int indexOfAttrBackgroundColor = 0;
-            TypedArray a = mContext.obtainStyledAttributes(backgroundColorAttr);
-            mWindowBackgroundColor = a.getColor(indexOfAttrBackgroundColor, -1);
-            a.recycle();
-        } catch (Exception e) {
-            mWindowBackgroundColor = Color.WHITE;
-        }
     }
 }
