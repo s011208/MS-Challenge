@@ -287,6 +287,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         mFinishTime.setText(getTimeStringFormat(mFinishDateData));
 
         mNotifyResult = (TextView) findViewById(R.id.notify_result);
+        mNotifyResult.setText(mNotifyStringArray[mNotifyDataIndex]);
         mNotifyContainer = (RelativeLayout) findViewById(R.id.notify);
         mNotifyContainer.setOnClickListener(this);
         mMember = (TextView) findViewById(R.id.member);
@@ -479,11 +480,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mNotifyDataIndex = which;
-                        if (mNotifyDataIndex == 0) {
-                            mNotifyResult.setText(null);
-                        } else {
-                            mNotifyResult.setText(mNotifyStringArray[mNotifyDataIndex]);
-                        }
+                        mNotifyResult.setText(mNotifyStringArray[mNotifyDataIndex]);
                         dialog.dismiss();
                     }
                 })

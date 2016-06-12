@@ -87,7 +87,6 @@
                     android:gravity="center"
                     android:minEms="3"
                     android:minHeight="?android:attr/listPreferredItemHeight"
-                    android:text="00:00"
                     android:textColor="@color/primary_text_color_schedule"
                     android:textSize="@dimen/schedule_primary_text_size" />
 
@@ -135,7 +134,6 @@
                     android:gravity="center"
                     android:minEms="3"
                     android:minHeight="?android:attr/listPreferredItemHeight"
-                    android:text="10:00"
                     android:textColor="@color/primary_text_color_schedule"
                     android:textSize="@dimen/schedule_primary_text_size" />
 
