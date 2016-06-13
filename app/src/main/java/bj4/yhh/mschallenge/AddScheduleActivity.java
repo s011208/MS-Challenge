@@ -426,7 +426,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
     private void handleOnCancel() {
         new AlertDialog.Builder(AddScheduleActivity.this)
                 .setTitle(R.string.schedule_cancel_confirm_dialog_title)
-                .setMessage(R.string.schedule_cancel_confirm_dialog_message)
+                .setMessage(mUpdateId == -1 ? R.string.schedule_cancel_confirm_dialog_message : R.string.schedule_cancel_confirm_dialog_message_update)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
