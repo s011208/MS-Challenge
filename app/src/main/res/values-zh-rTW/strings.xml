@@ -7,6 +7,8 @@
     <string name="action_settings">設定</string>
     <string name="action_about">關於</string>
 
+    <string name="app_author_name">黃彥勳</string>
+
     <!-- schedule activity -->
     <string name="schedule_activity_hint_title">主旨</string>
     <string name="schedule_activity_whole_day">整日</string>
@@ -69,7 +71,7 @@
     <!-- preference -->
     <string name="preference_about_category_about_me">關於我</string>
     <string name="preference_about_me_name">名字</string>
-    <string name="preference_about_me_summary">黃彥勳</string>
+    <string name="preference_about_me_summary">@string/app_author_name</string>
     <string name="preference_about_me_linkedin_page">LinkedIn 頁面</string>
     <string name="preference_about_me_github">Github 頁面</string>
     <string name="preference_about_me_facebook">Facebook 頁面</string>

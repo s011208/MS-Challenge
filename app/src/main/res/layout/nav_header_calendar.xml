@@ -29,6 +29,6 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="YenHsun, Huang" />
+        android:text="@string/app_author_name" />
 
 </LinearLayout>
