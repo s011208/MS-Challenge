@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Animatable;
@@ -110,7 +111,20 @@ public class CalendarActivity extends AppCompatActivity
             if (ActivityCompat.shouldShowRequestPermissionRationale(CalendarActivity.this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
                 new AlertDialog.Builder(CalendarActivity.this)
-                        .setTitle(R.string.permission_dialog_location_title).setMessage(R.string.permission_dialog_location_title).create().show();
+                        .setTitle(R.string.permission_dialog_location_title).setMessage(R.string.permission_dialog_location_message)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions(CalendarActivity.this,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        REQUEST_PERMISSION_LOCATION);
+                            }
+                        }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create().show();
             } else {
                 ActivityCompat.requestPermissions(CalendarActivity.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
