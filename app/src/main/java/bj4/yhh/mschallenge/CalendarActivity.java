@@ -63,6 +63,7 @@ public class CalendarActivity extends AppCompatActivity
 
     private static final String EXTRA_MENU_BUTTON_TEXT = "e_menu_button_text";
     private static final String EXTRA_IS_SHOW_CALENDAR = "e_is_show_calendar";
+    private static final String EXTRA_SELECTED_DATE = "e_selected_date";
 
     private final Calendar mCalendar = Calendar.getInstance();
     private final List<String> mMonthString = Utilities.getMonthString();
@@ -82,7 +83,7 @@ public class CalendarActivity extends AppCompatActivity
         setContentView(R.layout.activity_calendar);
         mCalendar.setTimeInMillis(System.currentTimeMillis());
         Utilities.clearCalendarOffset(mCalendar);
-        mSelectedDateTime = mCalendar.getTime();
+        mSelectedDateTime = savedInstanceState == null ? mCalendar.getTime() : new Date(savedInstanceState.getLong(EXTRA_SELECTED_DATE, mCalendar.getTimeInMillis()));
         mIsShowCalendar = savedInstanceState == null ? false : savedInstanceState.getBoolean(EXTRA_IS_SHOW_CALENDAR, false);
         initComponents(savedInstanceState);
         requestPermissions();
@@ -93,6 +94,7 @@ public class CalendarActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putString(EXTRA_MENU_BUTTON_TEXT, mMenuMonthText.getText().toString());
         outState.putBoolean(EXTRA_IS_SHOW_CALENDAR, mIsShowCalendar);
+        outState.putLong(EXTRA_SELECTED_DATE, mSelectedDateTime.getTime());
     }
 
     @Override
