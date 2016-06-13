@@ -33,7 +33,7 @@ import bj4.yhh.mschallenge.weather.WeatherConfig;
 public class CurrentWeatherFragment extends Fragment {
     private static final int REQUEST_FINE_LOCATION = 10001;
 
-    private static final String SHAREDPREFERENCE = "weather_fragment";
+    private static final String SHARED_PREFERENCE = "weather_fragment";
     private static final String KEY_LOAD_TIME = "load_time";
     private static final String KEY_DATA = "data";
 
@@ -112,7 +112,7 @@ public class CurrentWeatherFragment extends Fragment {
             protected TheDarkSkyForecastParser doInBackground(Void... params) {
                 Context context = getActivity();
                 if (context == null) return null;
-                SharedPreferences spref = context.getSharedPreferences(SHAREDPREFERENCE, Context.MODE_PRIVATE);
+                SharedPreferences spref = context.getSharedPreferences(SHARED_PREFERENCE, Context.MODE_PRIVATE);
                 String data;
                 // data will be expired after an hour
                 if (spref.getLong(KEY_LOAD_TIME, -1) + Utilities.HOUR > SystemClock.elapsedRealtime()) {

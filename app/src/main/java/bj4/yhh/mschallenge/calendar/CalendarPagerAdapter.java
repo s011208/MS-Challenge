@@ -19,15 +19,15 @@ public class CalendarPagerAdapter extends PagerAdapter {
     private static final int NUMBER_OF_PAGE = 1000;
     private final int mBaseYear, mBaseMonth;
     private final Context mContext;
-    private final Calendar mCalendar = Calendar.getInstance();
     private final Map<Integer, CalendarDateView> mViewsMap = new HashMap<>();
     private final Stack<CalendarDateView> mCalendarDateViewCache = new Stack<>();
 
     public CalendarPagerAdapter(Context context) {
         mContext = context;
-        mCalendar.setTimeInMillis(System.currentTimeMillis());
-        mBaseYear = mCalendar.get(Calendar.YEAR);
-        mBaseMonth = mCalendar.get(Calendar.MONTH);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        mBaseYear = calendar.get(Calendar.YEAR);
+        mBaseMonth = calendar.get(Calendar.MONTH);
     }
 
     public static Date calculateDateByPosition(final int baseYear, final int baseMonth, final int position) {

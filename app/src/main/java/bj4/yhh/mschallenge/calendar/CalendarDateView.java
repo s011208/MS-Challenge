@@ -83,7 +83,7 @@ public class CalendarDateView extends FullyExpandedGridView {
     }
 
     public void updateSelectedDate(Date selectedDate) {
-        int pressedPosition = -1;
+        int pressedPosition;
         for (int i = 0; i < mCalendarDateViewAdapter.getCount(); ++i) {
             CalendarItem item = mCalendarDateViewAdapter.getItem(i);
             if (item instanceof CalendarDate) {

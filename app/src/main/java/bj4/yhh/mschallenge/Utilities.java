@@ -140,7 +140,7 @@ public class Utilities {
     /**
      * keep year, month & day of calendar
      *
-     * @param c
+     * @param c calendar to be clear
      */
     public static void clearCalendarOffset(Calendar c) {
         c.set(Calendar.MILLISECOND, 0);

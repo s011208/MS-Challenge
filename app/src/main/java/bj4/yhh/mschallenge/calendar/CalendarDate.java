@@ -10,14 +10,6 @@ public class CalendarDate extends CalendarItem {
     private boolean mHasSchedule;
     private boolean mClickable = true;
 
-    public CalendarDate(Date date) {
-        this(date, false);
-    }
-
-    public CalendarDate(Date date, boolean hasSchedule) {
-        this(date, hasSchedule, false);
-    }
-
     public CalendarDate(Date date, boolean hasSchedule, boolean clickable) {
         if (date == null) {
             throw new RuntimeException("Failed to set date");
@@ -41,10 +33,6 @@ public class CalendarDate extends CalendarItem {
 
     public boolean hasSchedule() {
         return mHasSchedule;
-    }
-
-    public void setClickable(boolean clickable) {
-        mClickable = clickable;
     }
 
     @Override

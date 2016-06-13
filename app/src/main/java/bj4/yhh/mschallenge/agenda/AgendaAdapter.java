@@ -57,9 +57,9 @@ public class AgendaAdapter extends BaseAdapter implements PinnedSectionListView.
     }
 
     /**
-     * @param startDateTime
-     * @param finishDateTime
-     * @param selectedDateTime
+     * @param startDateTime start time of agenda view
+     * @param finishDateTime finish time of agenda view
+     * @param selectedDateTime focus date item
      * @return whether reload data
      */
     public boolean setDateTimeRange(long startDateTime, long finishDateTime, long selectedDateTime) {

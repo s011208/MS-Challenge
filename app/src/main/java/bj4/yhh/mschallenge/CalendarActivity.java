@@ -85,7 +85,7 @@ public class CalendarActivity extends AppCompatActivity
         mCalendar.setTimeInMillis(System.currentTimeMillis());
         Utilities.clearCalendarOffset(mCalendar);
         mSelectedDateTime = savedInstanceState == null ? mCalendar.getTime() : new Date(savedInstanceState.getLong(EXTRA_SELECTED_DATE, mCalendar.getTimeInMillis()));
-        mIsShowCalendar = savedInstanceState == null ? false : savedInstanceState.getBoolean(EXTRA_IS_SHOW_CALENDAR, false);
+        mIsShowCalendar = savedInstanceState != null && savedInstanceState.getBoolean(EXTRA_IS_SHOW_CALENDAR, false);
         initComponents(savedInstanceState);
         requestPermissions();
     }
@@ -150,7 +150,7 @@ public class CalendarActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         initCustomActionBar(savedInstanceState);
@@ -236,14 +236,17 @@ public class CalendarActivity extends AppCompatActivity
             toolbar.setContentInsetsAbsolute(0, 0);
             toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.ic_account_box_outline_white_24dp));
         }
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        ActionBar.LayoutParams params = new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.MATCH_PARENT);
-        mMenuMonthText = (TextView) ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.menu_month_layout, null);
-        mMenuMonthText.setText(savedInstanceState == null ? mMonthString.get(mCalendar.get(Calendar.MONTH)) : savedInstanceState.getString(EXTRA_MENU_BUTTON_TEXT, mMonthString.get(mCalendar.get(Calendar.MONTH))));
-        getSupportActionBar().setCustomView(mMenuMonthText, params);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setDisplayShowCustomEnabled(true);
+
+            ActionBar.LayoutParams params = new ActionBar.LayoutParams(
+                    ActionBar.LayoutParams.WRAP_CONTENT,
+                    ActionBar.LayoutParams.MATCH_PARENT);
+            mMenuMonthText = (TextView) ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.menu_month_layout, null);
+            mMenuMonthText.setText(savedInstanceState == null ? mMonthString.get(mCalendar.get(Calendar.MONTH)) : savedInstanceState.getString(EXTRA_MENU_BUTTON_TEXT, mMonthString.get(mCalendar.get(Calendar.MONTH))));
+            getSupportActionBar().setCustomView(mMenuMonthText, params);
+        }
         mMenuMonthText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -331,7 +334,7 @@ public class CalendarActivity extends AppCompatActivity
                 mMenuButtonAnimator.cancel();
             }
             if (mIsShowCalendar) {
-                mMenuButtonAnimator = new ValueAnimator().ofFloat(1f, 0f);
+                mMenuButtonAnimator = ValueAnimator.ofFloat(1f, 0f);
                 mMenuButtonAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
@@ -368,7 +371,7 @@ public class CalendarActivity extends AppCompatActivity
                 mMenuButtonAnimator.setDuration(CALENDAR_VIEW_VISIBILITY_CHANGE_DURATION);
                 mMenuButtonAnimator.start();
             } else {
-                mMenuButtonAnimator = new ValueAnimator().ofFloat(0f, 1f);
+                mMenuButtonAnimator = ValueAnimator.ofFloat(0f, 1f);
                 mMenuButtonAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {

@@ -92,11 +92,12 @@ public class TheDarkSkyForecastParser {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("TheDarkSkyForecastParser, mLatitude: " + mLatitude + ", mLongitude: " + mLongitude
-                + ", mTimeZone: " + mTimeZone + ", mOffset: " + mOffset);
-        builder.append("\nmCurrentlyData: " + mCurrentlyData.toString());
-        builder.append("\nmDailyData: " + mDailyData.toString());
-        builder.append("\nmHourlyData: " + mHourlyData.toString());
+        builder.append("TheDarkSkyForecastParser, mLatitude: ").append(mLatitude)
+                .append(", mLongitude: ").append(mLongitude)
+                .append(", mTimeZone: ").append(mTimeZone).append(", mOffset: ").append(mOffset)
+                .append("\nmCurrentlyData: ").append(mCurrentlyData.toString())
+                .append("\nmDailyData: ").append(mDailyData.toString())
+                .append("\nmHourlyData: ").append(mHourlyData.toString());
         return builder.toString();
     }
 

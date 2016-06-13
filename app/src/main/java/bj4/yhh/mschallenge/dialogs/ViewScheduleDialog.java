@@ -18,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import bj4.yhh.mschallenge.R;
 import bj4.yhh.mschallenge.Utilities;
@@ -104,9 +103,9 @@ public class ViewScheduleDialog extends DialogFragment {
         long sectionTime = arguments.getLong(ARGUMENT_SECTION_TIME, -1);
         String dateString;
         if (schedule.getStartTime() <= sectionTime) {
-            dateString = new SimpleDateFormat("yyyy.MM.dd EEE").format(sectionTime);
+            dateString = new SimpleDateFormat("yyyy.MM.dd EEE", getActivity().getResources().getConfiguration().locale).format(sectionTime);
         } else {
-            dateString = new SimpleDateFormat("yyyy.MM.dd EEE").format(schedule.getStartTime());
+            dateString = new SimpleDateFormat("yyyy.MM.dd EEE", getActivity().getResources().getConfiguration().locale).format(schedule.getStartTime());
         }
         String timeString;
         if (schedule.getIsWholeDay()) {
@@ -115,11 +114,11 @@ public class ViewScheduleDialog extends DialogFragment {
             if (schedule.getStartTime() <= sectionTime && schedule.getFinishTime() >= sectionTime + Utilities.DAY) {
                 timeString = getActivity().getString(R.string.schedule_activity_whole_day);
             } else if (schedule.getStartTime() <= sectionTime) {
-                timeString = "00:00 ▻ " + new SimpleDateFormat("HH:mm").format(schedule.getFinishTime());
+                timeString = "00:00 ▻ " + new SimpleDateFormat("HH:mm", getActivity().getResources().getConfiguration().locale).format(schedule.getFinishTime());
             } else if (schedule.getFinishTime() >= sectionTime + Utilities.DAY) {
-                timeString = new SimpleDateFormat("HH:mm").format(schedule.getStartTime()) + " ▻ 24:00";
+                timeString = new SimpleDateFormat("HH:mm", getActivity().getResources().getConfiguration().locale).format(schedule.getStartTime()) + " ▻ 24:00";
             } else {
-                timeString = new SimpleDateFormat("HH:mm").format(schedule.getStartTime()) + " ▻ " + new SimpleDateFormat("HH:mm").format(schedule.getFinishTime());
+                timeString = new SimpleDateFormat("HH:mm", getActivity().getResources().getConfiguration().locale).format(schedule.getStartTime()) + " ▻ " + new SimpleDateFormat("HH:mm", getActivity().getResources().getConfiguration().locale).format(schedule.getFinishTime());
             }
         }
         scheduleTime.setText(dateString + "\n" + timeString);

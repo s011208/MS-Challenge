@@ -220,7 +220,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
                         c.close();
                     }
                 }
-                return new TitleArrayAdapter(AddScheduleActivity.this, android.R.layout.simple_list_item_1, new ArrayList(dataSet));
+                return new TitleArrayAdapter(AddScheduleActivity.this, android.R.layout.simple_list_item_1, new ArrayList<>(dataSet));
             }
 
             @Override
@@ -578,11 +578,11 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         } else {
             format = "EEE, MMM dd";
         }
-        return new SimpleDateFormat(format).format(date);
+        return new SimpleDateFormat(format, getResources().getConfiguration().locale).format(date);
     }
 
     private String getTimeStringFormat(Date date) {
-        return new SimpleDateFormat("HH:mm").format(date);
+        return new SimpleDateFormat("HH:mm", getResources().getConfiguration().locale).format(date);
     }
 
     @Override
@@ -623,7 +623,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
 
                 @Override
                 protected void publishResults(CharSequence constraint, FilterResults results) {
-                    if (results != null && results.count > 0) {
+                    if (results != null && results.count > 0 && results.values instanceof List<?>) {
                         clear();
                         addAll((List<String>) results.values);
                         notifyDataSetChanged();

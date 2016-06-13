@@ -22,8 +22,4 @@ public class Event extends AgendaItem {
         return mSectionDateTime;
     }
 
-    @Override
-    public boolean isClickable() {
-        return true;
-    }
 }

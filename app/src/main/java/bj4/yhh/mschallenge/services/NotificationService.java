@@ -36,7 +36,11 @@ public class NotificationService extends Service {
                     TableScheduleContent.COLUMN_START_TIME + ">" + currentTime +
                             " and " + TableScheduleContent.COLUMN_NOTIFY + "!=" + TableScheduleContent.SCHEDULE_NOTIFY_NONE, null, null);
             if (DEBUG)
-                Log.i(TAG, "data count: " + data.getCount());
+                if (data != null) {
+                    Log.i(TAG, "data count: " + data.getCount());
+                } else {
+                    Log.i(TAG, "data is null");
+                }
             if (data != null) {
                 try {
                     final int indexOfId = data.getColumnIndex(TableScheduleContent.COLUMN_ID);
@@ -79,7 +83,7 @@ public class NotificationService extends Service {
                                 notificationDiffTime = 60 * Utilities.MINUTE;
                             }
                         } else if (notify == TableScheduleContent.SCHEDULE_NOTIFY_RIGHT_IN_TIME) {
-                            if ((timeDiff >= 0 * Utilities.MINUTE && timeDiff <= 1 * Utilities.MINUTE)) {
+                            if ((timeDiff >= 0L && timeDiff <= Utilities.MINUTE)) {
                                 sendNotify = true;
                                 notificationDiffTime = 0;
                             }
@@ -126,6 +130,10 @@ public class NotificationService extends Service {
         builder.setWhen(when);
         builder.setDefaults(Notification.DEFAULT_SOUND);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            /**
+             * get color deprecated in API 23
+             */
+            //noinspection deprecation
             builder.setColor(getResources().getColor(R.color.colorPrimary));
         }
 

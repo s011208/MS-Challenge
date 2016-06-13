@@ -14,8 +14,4 @@ public class Section extends AgendaItem {
         return mDateTime;
     }
 
-    @Override
-    public boolean isClickable() {
-        return false;
-    }
 }

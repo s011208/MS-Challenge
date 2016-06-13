@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -44,7 +45,8 @@ public class ScheduleProvider extends ContentProvider {
     public boolean onCreate() {
         mDatabase = new ProviderDatabase(getContext()).getWritableDatabase();
         if (CLEAR_DATABASE_IN_ADVANCE) {
-            Log.w(TAG, "CLEAR DATABASE TABLE");
+            if (DEBUG)
+                Log.w(TAG, "CLEAR DATABASE TABLE");
             mDatabase.delete(TableWeather.TABLE_NAME, null, null);
             mDatabase.delete(TableScheduleContent.TABLE_NAME, null, null);
         }
@@ -57,7 +59,7 @@ public class ScheduleProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         Cursor rtn = null;
         switch (sMatcher.match(uri)) {
             case MATCHER_SCHEDULE_CONTENT:
@@ -72,13 +74,13 @@ public class ScheduleProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         return null;
     }
 
     @Nullable
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         Uri rtn = null;
         switch (sMatcher.match(uri)) {
             case MATCHER_SCHEDULE_CONTENT:
@@ -92,7 +94,7 @@ public class ScheduleProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         int rtn = 0;
         switch (sMatcher.match(uri)) {
             case MATCHER_SCHEDULE_CONTENT:
@@ -106,7 +108,8 @@ public class ScheduleProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, @Nullable ContentValues values,
+                      @Nullable String selection, @Nullable String[] selectionArgs) {
         int rtn = 0;
         switch (sMatcher.match(uri)) {
             case MATCHER_SCHEDULE_CONTENT:

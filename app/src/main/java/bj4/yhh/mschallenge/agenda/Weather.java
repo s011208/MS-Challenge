@@ -15,14 +15,6 @@ public class Weather extends AgendaItem {
         mDateTime = dateTime;
     }
 
-    public Weather(int weatherTime, long dateTime, int temperature, String summary, String iconString) {
-        mWeatherTime = weatherTime;
-        mDateTime = dateTime;
-        mSummary = summary;
-        mIconString = iconString;
-        setTemperature(temperature);
-    }
-
     public void setTemperature(int temperature) {
         mTemperature = (int) (((float) temperature - 32) * (5 / 9f));
     }
@@ -55,8 +47,4 @@ public class Weather extends AgendaItem {
         return mWeatherTime;
     }
 
-    @Override
-    public boolean isClickable() {
-        return false;
-    }
 }
