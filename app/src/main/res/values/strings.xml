@@ -60,7 +60,7 @@
 
     <!-- view schedule dialog -->
     <string name="view_schedule_dialog_edit">Edit</string>
-    <string name="view_schedule_dialog_read_more">... read more</string>
+    <string name="view_schedule_dialog_read_more">…read more</string>
 
     <!-- permission dialog -->
     <string name="permission_dialog_location_title">Enable location</string>

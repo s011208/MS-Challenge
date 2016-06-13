@@ -1,0 +1,84 @@
+<resources>
+    <string name="app_name">MS Challenge</string>
+
+    <string name="navigation_drawer_open">開啟側邊選單</string>
+    <string name="navigation_drawer_close">關閉側邊選單</string>
+
+    <string name="action_settings">設定</string>
+    <string name="action_about">關於</string>
+
+    <!-- schedule activity -->
+    <string name="schedule_activity_hint_title">主旨</string>
+    <string name="schedule_activity_whole_day">整日</string>
+    <string name="schedule_start_date">開始日期</string>
+    <string name="schedule_finish_date">結束日期</string>
+    <string name="schedule_location_hint">地點</string>
+    <string name="schedule_notify">通知</string>
+    <string name="schedule_member">成員</string>
+    <string name="schedule_description">描述</string>
+    <string name="schedule_new_event">新行程</string>
+    <string name="schedule_cancel_confirm_dialog_title">警告</string>
+    <string name="schedule_cancel_confirm_dialog_message">是否想要取消新增新的行程？</string>
+    <string name="schedule_cancel_confirm_dialog_message_update">是否想要取消更新行程？</string>
+    <string name="schedule_cancel_confirm_dialog_negative">返回</string>
+    <string name="schedule_remove_item">刪除</string>
+    <string name="schedule_remove_confirm_dialog_message">是否想要刪除行程？</string>
+
+    <string-array name="schedule_notify_time_list">
+        <item>不需通知</item>
+        <item>當開始的時候</item>
+        <item>前 5 分鐘</item>
+        <item>前 10 分鐘</item>
+        <item>前 15 分鐘</item>
+        <item>前 30 分鐘</item>
+        <item>前 1 小時</item>
+    </string-array>
+
+    <string-array name="schedule_notify_start_time">
+        <item>""</item>
+        <item>現在</item>
+        <item>5 分鐘後</item>
+        <item>10 分鐘後</item>
+        <item>15 分鐘後</item>
+        <item>30 分鐘後</item>
+        <item>1 小時候</item>
+    </string-array>
+
+    <!-- agenda view-->
+    <string name="agenda_view_yesterday">昨日</string>
+    <string name="agenda_view_today">今日</string>
+    <string name="agenda_view_tomorrow">明日</string>
+    <string name="agenda_view_no_event">沒有任何行程</string>
+    <string name="agenda_view_morning">早晨</string>
+    <string name="agenda_view_afternoon">中午</string>
+    <string name="agenda_view_night">晚上</string>
+
+    <!-- calendar activity -->
+    <string name="calendar_activity_add_schedule_success">新增行程成功</string>
+    <string name="calendar_activity_update_schedule_success">更新行程成功</string>
+    <string name="calendar_activity_remove_schedule_success">刪除行程成功</string>
+
+    <!-- view schedule dialog -->
+    <string name="view_schedule_dialog_edit">編輯</string>
+    <string name="view_schedule_dialog_read_more">…閱讀更多</string>
+
+    <!-- permission dialog -->
+    <string name="permission_dialog_location_title">允許地點通知</string>
+    <string name="permission_dialog_location_message">允許地點通知來讓我們提供給您更多功能！</string>
+
+    <!-- preference -->
+    <string name="preference_about_category_about_me">關於我</string>
+    <string name="preference_about_me_name">名字</string>
+    <string name="preference_about_me_summary">黃彥勳</string>
+    <string name="preference_about_me_linkedin_page">LinkedIn 頁面</string>
+    <string name="preference_about_me_github">Github 頁面</string>
+    <string name="preference_about_me_facebook">Facebook 頁面</string>
+    <string name="preference_about_me_email">Email 地址</string>
+    <string name="preference_about_me_email_summary">s011208@gmail.com</string>
+    <string name="preference_about_me_email_subject">嗨，彥勳，我想要聯絡你！</string>
+    <string name="preference_about_me_email_text">哈哈，我現在正在你的關於我頁面唷！</string>
+    <string name="preference_about_me_failed_to_start_browser">無法開啟瀏覽器</string>
+
+    <!-- current weather fragment -->
+    <string name="current_weather_fragment_current_weather">目前天氣</string>
+</resources>
