@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
+import android.app.NotificationManager;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -357,6 +358,8 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     getContentResolver().delete(TableScheduleContent.URI, TableScheduleContent.COLUMN_ID + "=" + mUpdateId, null);
+                                    NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                    manager.cancel((int) (mUpdateId % Integer.MAX_VALUE));
                                     Intent intent = new Intent();
                                     intent.putExtra(EXTRA_START_TIME, mStartDateData.getTime());
                                     intent.putExtra(EXTRA_FINISH_TIME, mFinishDateData.getTime());
