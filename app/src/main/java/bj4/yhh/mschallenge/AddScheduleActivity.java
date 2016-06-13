@@ -289,6 +289,10 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         mFinishTime = (TextView) findViewById(R.id.finish_time);
         mFinishTime.setOnClickListener(this);
         mFinishTime.setText(getTimeStringFormat(mFinishDateData));
+        if (mIsWholeDay) {
+            mStartTime.setVisibility(View.INVISIBLE);
+            mFinishTime.setVisibility(View.INVISIBLE);
+        }
 
         mNotifyResult = (TextView) findViewById(R.id.notify_result);
         mNotifyResult.setText(mNotifyStringArray[mNotifyDataIndex]);
